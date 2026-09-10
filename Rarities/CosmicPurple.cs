@@ -1,0 +1,96 @@
+﻿using System;
+using System.Text.RegularExpressions;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Graphics;
+using Terraria;
+using Terraria.GameContent;
+using Terraria.ID;
+using Terraria.ModLoader;
+using Terraria.UI.Chat;
+using Terraria.Utilities;
+
+namespace asuw.Rarities
+{
+    public class CosmicPurple : ModRarity
+    {
+        // Cosmic Purple is the rarity for Post-DoG gear.
+        // It is a unique rarity and does not have its items rarity change on reforge.
+        public override Color RarityColor => TextClr * 2f;
+
+        public static Color BloomClr = new Color(255, 255, 255, 0);
+        public static Color TextClr = new Color(255, 255, 255, 255);
+
+        public sealed class CustomTextSnippet(string text) : TextSnippet
+        {
+            public override bool UniqueDraw(bool justCheckingString, out Vector2 size, SpriteBatch spriteBatch, Vector2 position = new Vector2(), Color color = new Color(), float scale = 1)
+            {
+                size = new Vector2(GetStringLength(FontAssets.MouseText.Value), FontAssets.MouseText.Value.MeasureString(" ").Y * scale);
+
+                if (color == default || color == Main.MouseTextColorReal)
+                {
+                    color = Colors.AlphaDarken(TextClr);
+                }
+
+                if (!justCheckingString && (color.R != 0 || color.G != 0 || color.B != 0))
+                {
+                    var font = FontAssets.MouseText.Value;
+                    color.A = 255;
+                    float pulsing = 2.5f + (float)Math.Sin(Main.GlobalTimeWrappedHourly * 5f);
+                    for (float f = 0f; f < MathHelper.TwoPi; f += 0.79f)
+                    {
+                        ChatManager.DrawColorCodedString(spriteBatch, font, text, position + new Vector2(pulsing, 0f).RotatedBy(f + Main.GlobalTimeWrappedHourly * 2f % MathHelper.TwoPi), color with { A = 0 } * 0.5f, 0, Vector2.Zero, new(scale));
+                    }
+                    ChatManager.DrawColorCodedStringShadow(spriteBatch, font, text, position, color * 2f, 0, Vector2.Zero, new(scale));
+                    ChatManager.DrawColorCodedString(spriteBatch, font, text, position, Color.Black, 0, Vector2.Zero, new(scale));
+                }
+                return true;
+            }
+            public override float GetStringLength(DynamicSpriteFont font)
+            {
+                float size = font.MeasureString(text).X;
+                return size * Scale;
+            }
+        }
+
+        public static void Draw(Item Item, SpriteBatch spriteBatch, string text, int X, int Y, Color textColor, Color lightColor, float rotation,
+            Vector2 origin, Vector2 baseScale, float time, DynamicSpriteFont font)
+        {
+            var crystalTextGlow = ModContent.Request<Texture2D>("asuw/Rarities/CrystalTextGlow").Value;
+            var sparkle = ModContent.Request<Texture2D>("asuw/Rarities/CrystalTextSparkle").Value;
+            var fontSize = ChatManager.GetStringSize(font, text, new Vector2(1));
+            var center = fontSize / 2f;
+            if (Item.expert) textColor = Main.DiscoColor;
+
+            // Get all snippets and convert all plain text snippets to the custom rarity snippet
+            TextSnippet[] snippets = ChatManager.ParseMessage(text, textColor).ToArray();
+            for (int i = 0; i < snippets.Length; i++)
+            {
+                TextSnippet textSnippet = snippets[i];
+                if (snippets[i].GetType() == typeof(TextSnippet))
+                {
+                    snippets[i] = new CustomTextSnippet(textSnippet.Text);
+                }
+            }
+
+            //Draw backglow
+            var glowPosition = new Vector2(X + center.X, Y + center.Y / 1.5f);
+            spriteBatch.Draw(crystalTextGlow, glowPosition, null, lightColor, rotation + MathHelper.PiOver2, new Vector2(6f, 33f),
+               new Vector2(1.6f, fontSize.X / crystalTextGlow.Height * 1.2f), SpriteEffects.None, 0f);
+
+            //Draw text
+            ChatManager.DrawColorCodedString(spriteBatch, font, snippets, new(X,Y), textColor, 0, Vector2.Zero, baseScale, out _, -1, true);
+
+        }
+
+        public static void Draw(Item Item, string text, int X, int Y, float rotation, Vector2 origin, Vector2 baseScale, Color? textColor = null, Color? lightColor = null)
+        {
+            Draw(Item, Main.spriteBatch, text, X, Y, Colors.AlphaDarken(textColor ?? TextClr), lightColor ?? BloomClr, rotation, origin, baseScale, Main.GlobalTimeWrappedHourly, FontAssets.MouseText.Value);
+        }
+
+        public static void Draw(Item Item, DrawableTooltipLine line)
+        {
+            Draw(Item, line.Text, line.X, line.Y, line.Rotation, line.Origin, line.BaseScale);
+        }
+    }
+}

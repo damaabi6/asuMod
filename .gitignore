@@ -1,0 +1,17 @@
+﻿# Build artifacts
+bin/
+obj/
+
+* text=auto eol=lf
+
+# tModLoader compiled output
+*.tmod
+
+# Visual Studio / Rider
+.vs/
+*.user
+*.suo
+
+# OS junk
+.DS_Store
+Thumbs.db

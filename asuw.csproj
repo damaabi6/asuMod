@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<!-- Import tModLoader mod properties -->
+	<Import Project="..\tModLoader.targets" />
+
+	<!-- General -->
+	<PropertyGroup>
+	  <LangVersion>preview</LangVersion>
+	</PropertyGroup>
+	<ItemGroup>
+	  <Folder Include="Content\Textures\Extra\" />
+	  <Folder Include="Enums\" />
+	</ItemGroup>
+
+	<!-- References -->
+
+</Project>

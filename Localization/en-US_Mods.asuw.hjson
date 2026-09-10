@@ -1,0 +1,720 @@
+# This file will automatically update with entries for new content after a build and reload.
+
+Items: {
+	asuw: {
+		DisplayName: asuw
+		Tooltip:
+			'''
+			Template of an item
+			Replacing this tooltip is duty 
+			It's snowing on Mt.Fuji
+			'''
+	}
+
+	Horus: {
+		DisplayName: Eye of Horus
+		Tooltip:
+			'''
+			Homing NOT allowed
+			60% chance to not consume ammo
+			[c/ff00ff:-Weapon Skill-]
+			[c/ff22ff:Active Skill: Shoots a devastating terror bullet]
+			[c/ff33ff:Weapon Skill Cooldown: 6s ]
+			'''
+	}
+
+	Aru: {
+		DisplayName: Wine Red * Admire
+		Tooltip:
+			'''
+			[c/ff00ff:-Weapon Skill-]
+			[c/ff22ff:Active Skill: Shoots a hard-boiled shot that explodes after 3s ]
+			[c/ff33ff:Weapon Skill Cooldown: 9s ]
+			'''
+	}
+
+	Miyu: {
+		Tooltip: Finely made and boasts an AMAZING accuracy.
+		DisplayName: RABBIT type-39 rifle
+	}
+
+	Mari: {
+		DisplayName: Piety
+		Tooltip: "[c/ffcc00:Holy blessing]"
+	}
+
+	ChainWhip: {
+		DisplayName: Chain Whip
+		Tooltip: ""
+	}
+
+	Haruna: {
+		DisplayName: Ideal
+		Tooltip: ""
+	}
+
+	Kayoko: {
+		DisplayName: Demon's Roar
+		Tooltip:
+			'''
+			As the name implies, it makes a loud roaring noise every time it is fired
+			which explains the silencer
+			[c/4625a8:Right-click to let the demon roar.]
+			'''
+	}
+
+	Sakura: {
+		Tooltip: ""
+		DisplayName: Hanafuda
+	}
+
+	Mika: {
+		DisplayName: Quis ut Deus
+		Tooltip:
+			'''
+			[c/ff00ff:-Weapon Skill-]
+			[c/ff11ff:Passive Skill: Attacks ALWAYS crit and occasionally spawns healing orbs]
+			[c/cf7ee6:Kyrie Eleison]
+			'''
+	}
+
+	Claw: {
+		Tooltip: ""
+		DisplayName: Claw
+	}
+
+	RABBITBadge: {
+		DisplayName: RABBIT Badge
+		Tooltip:
+			'''
+			15% increased ranged damage
+			50% Increased ranged critical damage
+			Increases ranged armor penetration by 5
+			[c/a3cccb:'Hyauuu~']
+			'''
+	}
+
+	Honor: {
+		DisplayName: Honor
+		Tooltip:
+			'''
+			[c/ff00ff:-Weapon Skill-]
+			[c/ff11ff:Passive Skill: Fire a homing missile from the sky every other shot]
+			[c/ff22ff:Active Skill: Rain down missiles to your cursor, ][c/ffssff:and one straight to you ]
+			[c/ff33ff:Weapon Skill Cooldown: 5s ]
+			'''
+	}
+
+	Claw_W: {
+		DisplayName: Claw_ W
+		Tooltip: ""
+	}
+
+	Amiya: {
+		Tooltip: ""
+		DisplayName: Crown Shard
+	}
+
+	Subaru: {
+		DisplayName: Anomoios
+		Tooltip:
+			'''
+			[c/ff00ff:-Weapon Skill-]
+			[c/ff11ff:Passive Skill: Always shoots high velocity bullets in fluctuating fire-rate]
+			[c/ff22ff:Active Skill: Switch to Rapid Fire mode for 4s ]
+			[c/ff33ff:Weapon Skill Cooldown: 12s (including Rapid Fire mode) ]
+			'''
+	}
+
+	SOL: {
+		DisplayName: Sword Of Light : Supernova for Abi-Eshuh
+		Tooltip:
+			'''
+			[c/ff00ff:-Weapon Skill-]
+			[c/ff11ff:Passive Skill: Shoots plasma rounds that increases your charge meter every hit]
+			[c/ff22ff:Active Skill: Consume all charges to shoot an infinitely piercing beam of light ]
+			[c/ff33ff:Charge requirement: 10 ]
+			'''
+	}
+
+	Crimson: {
+		DisplayName: Crimson
+		Tooltip: ""
+	}
+
+	IronLotus: {
+		DisplayName: Iron Lotus
+		Tooltip: ""
+	}
+
+	TheLightningRod: {
+		DisplayName: The Lightning Rod
+		Tooltip: ""
+	}
+
+	ButterflyHairpin: {
+		DisplayName: Butterfly Hairpin
+		Tooltip:
+			'''
+			[c/ff00ff:Increases all weapon skill damage by 25%]
+			[c/ff00ff:Increases all weapon skill cooldown by 1 second]
+			[c/ff00ff:Increases all weapon skill resource requirement by 20%]
+			'''
+	}
+
+	ButterflyHairpin2: {
+		DisplayName: Butterfly Hairpin2
+		Tooltip: ""
+	}
+
+	ShiAssociation: {
+		DisplayName: Shi Association
+		Tooltip:
+			'''
+			[c/ff00ff:-Weapon Skill-]
+			[c/ff11ff:Eye of Death/Enervation : All attacks heals you massively and reduce the next passive skill effectiveness /]/[c/ff44ff: You take 44% more damage while holding this weapon ]
+			[c/ff22ff:Assault : Dash towards your cursor, 1 in 4 chance to trigger][c/ff44ff: Boundary of Death]
+			[c/ff33ff:Weapon SKill Cooldown : 6s ]
+			'''
+	}
+
+	McWood: {
+		DisplayName: Mc Wood
+		Tooltip: ""
+	}
+
+	McStone: {
+		DisplayName: Mc Stone
+		Tooltip: ""
+	}
+
+	McCopper: {
+		DisplayName: Mc Copper
+		Tooltip: ""
+	}
+
+	McGolden: {
+		DisplayName: Mc Golden
+		Tooltip: ""
+	}
+
+	McIron: {
+		DisplayName: Mc Iron
+		Tooltip: ""
+	}
+
+	McDiamond: {
+		DisplayName: Mc Diamond
+		Tooltip: ""
+	}
+
+	SolemnLament: {
+		DisplayName: Solemn Lament
+		Tooltip: ""
+	}
+
+	Mohgwyn: {
+		DisplayName: Mohgwyn
+		Tooltip: ""
+	}
+
+	PentunganSahur: {
+		DisplayName: Pentungan Sahur
+		Tooltip: ""
+	}
+
+	Shiv: {
+		DisplayName: Shiv
+		Tooltip: ""
+	}
+
+	asuwh: {
+		DisplayName: asuwh
+		Tooltip: ""
+	}
+
+	ProjectionSorcery: {
+		DisplayName: Projection Sorcery
+		Tooltip: ""
+	}
+
+	ShittimChest: {
+		Tooltip: ""
+		DisplayName: Shittim Chest
+	}
+
+	Akari: {
+		DisplayName: Akari
+		Tooltip: ""
+	}
+
+	TheEnd: {
+		DisplayName: The End
+		Tooltip: ""
+	}
+
+	Koharu: {
+		DisplayName: Koharu
+		Tooltip: ""
+	}
+
+	Draupnir: {
+		DisplayName: Draupnir
+		Tooltip: ""
+	}
+
+	AKatana: {
+		DisplayName: A Katana
+		Tooltip: ""
+	}
+
+	Coronacht: {
+		DisplayName: Heart-Seeking Bow, Coronacht
+		Tooltip:
+			'''
+			It senses stalwart hearts, mostly to stop them but occasionally to be used. 
+			Weapon Skill: [SU]
+			Current Level: [LV] / 10
+			[c/a673ff:Daedalus Upgrades:] 
+			[c/ff00ff:Perfect Shot - Power Shot is easier to execute and deals more damage]
+			[c/ff11ff:M1U1]
+			[c/ff22ff:M2U2]
+			[c/ff33ff:M3U3] 
+			[c/ff44ff:M4U4]
+			[c/ff55ff:M5U5]
+			[c/a673ff:Daedalus skill upgrades:]
+			[c/ff66ff:S1UC1]
+			[c/ff77ff:S2UC2]
+			[c/ff88ff:S3UC3] 
+			[c/ff99ff:S4UC4]
+			[c/ffffff:UC5]
+			'''
+	}
+
+	OneGritSandpaper: {
+		DisplayName: One Grit Sandpaper
+		Tooltip: ""
+	}
+
+	FesteringLifeSword: {
+		DisplayName: Festering Life Sword
+		Tooltip: ""
+	}
+
+	KeiRG: {
+		Tooltip: ""
+		DisplayName: Kei R G
+	}
+
+	Accessories: {
+		Wings: {
+			CoreOfSupernova: {
+				DisplayName: Core Of Supernova
+				Tooltip:
+					'''
+					{$CommonItemTooltip.FlightAndSlowfall}
+					Hero of Light
+					'''
+			}
+		}
+	}
+
+	Yujin: {
+		DisplayName: Yujin
+		Tooltip: ""
+	}
+
+	Kirino: {
+		Tooltip: ""
+		DisplayName: Kirino
+	}
+
+	CorruptionEye: {
+		DisplayName: Corruption Eye
+		Tooltip: ""
+	}
+
+	AsuwDebug: {
+		Tooltip: ""
+		DisplayName: Asuw Debug
+	}
+
+	Lucilus: {
+		DisplayName: Lucilus
+		Tooltip: ""
+	}
+
+	TracerBullet: {
+		DisplayName: Tracer Bullet
+		Tooltip: ""
+	}
+
+	Weapons: {
+		Ranged: {
+			Hotshot: {
+				DisplayName: Hotshot
+				Tooltip: ""
+			}
+
+			Tsurugi: {
+				DisplayName: Blood & Gunpowder
+				Tooltip: ""
+			}
+		}
+
+		Melee: {
+			StaffOfHoma: {
+				DisplayName: Staff Of Homa
+				Tooltip:
+					'''
+					Weapon Skills:
+					 +Passive Skills:
+					   -Secret Spear of Wangsheng
+					      All damage from this weapon increases the lower the wielder's HP is.
+					   -Blood Blossom
+					      While Paramita Papilio is active, all attacks inflicts a burn effect.
+					      (burn damage is also affected by HP)
+					   -Spirit Soother
+					      While Paramita Papilio is active, all attacks heals the player.
+					 *Active Skills
+					   -Paramita Papilio
+					      Press {0} to consume 1/2 of your current HP and activate Paramita Papilio for 10 seconds.
+					   -Crimson Bouquet
+					      Press Right Click to consume (fraction) of your stamina and lunge forwards.
+					      While Paramita Papilio is active, hitting an enemy afflicted by Blood Blossom with this attack 
+					      will Trigger an explosion. This explosion will also remove the Blood Blossom effect from the enemy.
+					'''
+			}
+
+			SawCleaver: {
+				DisplayName: Saw Cleaver
+				Tooltip: ""
+			}
+		}
+	}
+
+	Moonveil: {
+		Tooltip: ""
+		DisplayName: Moonveil
+	}
+
+	NotMalikethBB: {
+		DisplayName: Not Maliketh B B
+		Tooltip: ""
+	}
+
+	BlackBlade: {
+		DisplayName: Black Blade
+		Tooltip: ""
+	}
+
+	MalikethBlackBlade: {
+		DisplayName: Maliketh Black Blade
+		Tooltip: ""
+	}
+
+	CoreOfSupernova: {
+		DisplayName: Core Of Supernova
+		Tooltip: ""
+	}
+}
+
+Projectiles: {
+	EnkiduPoint.DisplayName: Enkidu Point
+	AruBoom.DisplayName: Aru Boom
+	AruProj.DisplayName: Aru Proj
+	Miyuu.DisplayName: Miyuu
+	ChainWhips.DisplayName: Chain Whips
+	Hanafuda.DisplayName: Hanafuda
+	Bloom.DisplayName: Bloom
+	Duarpt2.DisplayName: Duarpt2
+	Duar.DisplayName: Duar
+	Boo.DisplayName: Boo
+	Fear.DisplayName: Fear
+	Mikafist.DisplayName: Mikafist
+	Mikafist2.DisplayName: Mikafist2
+	Bless.DisplayName: Bless
+	Claws.DisplayName: Claws
+	Rudal.DisplayName: Rudal
+	RudalAw.DisplayName: Rudal Aw
+	BoomS.DisplayName: Boom S
+	Muzzle.DisplayName: Muzzle
+	Blood.DisplayName: Blood
+	HealingOrb.DisplayName: Healing Orb
+	HealingOrbMika.DisplayName: Healing Orb Mika
+	ClawEx.DisplayName: Claw Ex
+	FillerClaw.DisplayName: Filler Claw
+	FillerClawEx.DisplayName: Filler Claw Ex
+	CasterBall.DisplayName: Caster Ball
+	Pew.DisplayName: Pew
+	Hikariyo.DisplayName: Hikariyo
+	SwordOfLight.DisplayName: Sword Of Light
+	AmiyaBack.DisplayName: Amiya Back
+	AmiyaPew.DisplayName: Amiya Pew
+	SwordLight.DisplayName: Sword Light
+	AmiyaBall.DisplayName: Amiya Ball
+	AmiyaBallPart.DisplayName: Amiya Ball Part
+	AmiyaBallBullet.DisplayName: Amiya Ball Bullet
+	AmiyaCaster.DisplayName: Amiya Caster
+	AmiyaBallHold.DisplayName: Amiya Ball Hold
+	HoshinoUlt.DisplayName: Hoshino Ult
+	IronLotusProj.DisplayName: Iron Lotus Proj
+	Engulfing.DisplayName: Engulfing
+	HoshinoUltBlast.DisplayName: Hoshino Ult Blast
+	SubaruRapidFireP.DisplayName: Subaru Rapid Fire P
+	Shi.DisplayName: Shi
+	BoundaryOfDeath.DisplayName: Boundary Of Death
+	BoundaryOfDeath4.DisplayName: Boundary Of Death4
+	BoundaryOfDeathDown.DisplayName: Boundary Of Death Down
+	BoundaryOfDeathUp.DisplayName: Boundary Of Death Up
+	HealingOrbShi.DisplayName: Healing Orb Shi
+	HealingOrbShiSmall.DisplayName: Healing Orb Shi Small
+	HealingOrbShiDash.DisplayName: Healing Orb Shi Dash
+	ShiBullet.DisplayName: Shi Bullet
+	HealingOrbShiTiny.DisplayName: Healing Orb Shi Tiny
+	ShiPierce.DisplayName: Shi Pierce
+	McStoneSweep.DisplayName: Mc Stone Sweep
+	StoneSweepProj.DisplayName: Stone Sweep Proj
+	CopperSweepProj.DisplayName: Copper Sweep Proj
+	McCopperSweep.DisplayName: Mc Copper Sweep
+	McGoldenHoldout.DisplayName: Mc Golden Holdout
+	GoldSweep.DisplayName: Gold Sweep
+	IronHoldout.DisplayName: Iron Holdout
+	IronLotusFire.DisplayName: Iron Lotus Fire
+	IronLotusPhys.DisplayName: Iron Lotus Phys
+	IronLotusPhys2.DisplayName: Iron Lotus Phys2
+	IronLotusFireMass.DisplayName: Iron Lotus Fire Mass
+	IronHoldoutPierce.DisplayName: Iron Holdout Pierce
+	IronHoldoutChange.DisplayName: Iron Holdout Change
+	IronSweep.DisplayName: Iron Sweep
+	IronBloom.DisplayName: Iron Bloom
+	CopperChange.DisplayName: Copper Change
+	GoldenHoldoutChange.DisplayName: Golden Holdout Change
+	StoneChange.DisplayName: Stone Change
+	IronPierceProj.DisplayName: Iron Pierce Proj
+	DiamondProj.DisplayName: Diamond Proj
+	Diamondlet.DisplayName: Diamondlet
+	IronFireBoomNPC.DisplayName: Iron Fire Boom N P C
+	IronFireBoomPlayer.DisplayName: Iron Fire Boom Player
+	IronLotusHeal.DisplayName: Iron Lotus Heal
+	LamentBullet.DisplayName: Lament Bullet
+	Lament.DisplayName: Lament
+	SolemnBullet.DisplayName: Solemn Bullet
+	Solemn.DisplayName: Solemn
+	LamentHurt.DisplayName: Lament
+	SolemnHeal.DisplayName: Solemn Heal
+	FuneralButterfly.DisplayName: Funeral Butterfly
+	Ding.DisplayName: Ding
+	MohgwynSacredSpear.DisplayName: Mohgwyn Sacred Spear
+	TripleT.DisplayName: Triple T
+	Tung.DisplayName: Tung
+	Sahur.DisplayName: Sahur
+	Shivs.DisplayName: Shivs
+	BladeDance.DisplayName: Blade Dance
+	BladeDanceFront.DisplayName: Blade Dance Front
+	npcLock.DisplayName: npc Lock
+	ProjectionScreen.DisplayName: Projection Screen
+	ProjectionFind.DisplayName: Projection Find
+	ProjectionDash.DisplayName: Projection Dash
+	ProjectionDashFront.DisplayName: Projection Dash Front
+	ShaterredProject.DisplayName: Shaterred Project
+	ShaterredProjectSparks.DisplayName: Shaterred Project Sparks
+	ProjectPunch.DisplayName: Project Punch
+	ProjectionBoom.DisplayName: Projection Boom
+	ProjectionHeal.DisplayName: Projection Heal
+	ShittimGuns.DisplayName: Shittim Guns
+	SuperHighVel.DisplayName: Super High Vel
+	TheEndHeld.DisplayName: The End Held
+	TheEndBullet.DisplayName: The End Bullet
+	TheEndBoom.DisplayName: The End Boom
+	TheEndSkillNotes.DisplayName: The End Skill Notes
+	SOLCharge.DisplayName: S O L Charge
+	TheEndShine.DisplayName: The End Shine
+	KoharuHeld.DisplayName: Koharu Held
+	OffsetCrosshair.DisplayName: Offset Crosshair
+	HolyHandGrenade.DisplayName: Holy Hand Grenade
+	HolyGrenadeBlast.DisplayName: Holy Grenade Blast
+	IronLotusCharge.DisplayName: Iron Lotus Charge
+	IronLotusHeavySlash.DisplayName: Iron Lotus Heavy Slash
+	DraupnirSpear.DisplayName: Draupnir Spear
+	AKatanaProj.DisplayName: A Katana Proj
+	TheEndCrosshair.DisplayName: The End Crosshair
+	TheEndInfos.DisplayName: The End Infos
+	CoronachtBow.DisplayName: Coronacht Bow
+	coronachtArrow.DisplayName: coronacht Arrow
+	ExplosiveCoronacht.DisplayName: Explosive Coronacht
+	OneGritInAction.DisplayName: One Grit In Action
+	FesteringLifeSwordHeld.DisplayName: Festering Life Sword Held
+	festeringBugs.DisplayName: festering Bugs
+	festeringBugsProj.DisplayName: festering Bugs Proj
+	festeringBugsPew.DisplayName: festering Bugs Pew
+	FesteringCockroach.DisplayName: Festering Cockroach
+	SOLHeld.DisplayName: S O L Held
+	KeiRGHeld.DisplayName: Kei R G Held
+	KeiBol.DisplayName: Kei Bol
+	SupernovaWings.DisplayName: Supernova Wings
+	SupernovaBlaster.DisplayName: Supernova Blaster
+	SupernovaBlast.DisplayName: Supernova Blast
+	SupernovaRocket.DisplayName: Supernova Rocket
+	HorusBarrier.DisplayName: Horus Barrier
+	HorusStuff.DisplayName: Horus Stuff
+	HorusHeld.DisplayName: Horus Held
+	KirinoProj.DisplayName: Kirino Proj
+	KirinoHeld.DisplayName: Kirino Held
+	KirinoSmoke.DisplayName: Kirino Smoke
+	EnergyBoltProjectile.DisplayName: Energy Bolt Projectile
+	Lusilly1.DisplayName: Lusilly1
+	Lusilly2.DisplayName: Lusilly2
+	Lusilly3.DisplayName: Lusilly3
+	testRot.DisplayName: test Rot
+	RedSaw.DisplayName: Red Saw
+	Rotaty.DisplayName: Rotaty
+	Straighty.DisplayName: Straighty
+	Smeary.DisplayName: Smeary
+	Booom.DisplayName: Booom
+	Planty.DisplayName: Planty
+	HorusBoomVis.DisplayName: Horus Boom Vis
+	FadeSmokeBall.DisplayName: Fade Smoke Ball
+	HotshotHeld.DisplayName: Hotshot Held
+	HotshotMag.DisplayName: Hotshot Mag
+	HotshotConcentratedBullet.DisplayName: Hotshot Concentrated Bullet
+	TracerBulletProj.DisplayName: Tracer Bullet Proj
+	TsurugiHeld.DisplayName: Tsurugi Held
+	BloodTsu.DisplayName: Blood Tsu
+	GunpowderTsu.DisplayName: Gunpowder Tsu
+	tsurugiShot.DisplayName: tsurugi Shot
+	HomaStaff.DisplayName: Homa Staff
+	ParamitaPapilio.DisplayName: Paramita Papilio
+	SawCleaverProj.DisplayName: Saw Cleaver Proj
+	MoonveilBlade.DisplayName: Moonveil Blade
+	MoonveilProj.DisplayName: Moonveil Proj
+	SheatedMoonveil.DisplayName: Sheated Moonveil
+	NotMalikethHold.DisplayName: Not Maliketh Hold
+	BlackBladeHold.DisplayName: Black Blade Hold
+	BlackBladeSkill.DisplayName: Black Blade Skill
+	BlackBladeSkillRed.DisplayName: Black Blade Skill Red
+	BlackBladeSlashes.DisplayName: Black Blade Slashes
+	BlackBladeSpell.DisplayName: Black Blade Spell
+	BlackbladeSpellProj.DisplayName: Blackblade Spell Proj
+	DirectStrikeConst.DisplayName: Direct Strike Const
+	SmallHikariyo.DisplayName: Small Hikariyo
+	thrusterFire.DisplayName: thruster Fire
+	SOLBigBlast.DisplayName: S O L Big Blast
+	SOLChargeUp.DisplayName: S O L Charge Up
+	SOLHikariyo.DisplayName: S O L Hikariyo
+	SOLSmallHikariyo.DisplayName: S O L Small Hikariyo
+}
+
+Buffs: {
+	ShitAss: {
+		Description: Mods.asuw.Buffs.ShitAss.Description
+		DisplayName: Shit Ass
+	}
+
+	Hemorrhage: {
+		Description: You're bleeding heavily
+		DisplayName: Hemorrhage
+	}
+
+	Smoke: {
+		DisplayName: Smoke Inhalation
+		Description: Your lungs are filled with smoke
+	}
+
+	BlackBlood: {
+		DisplayName: Black Blood
+		Description: Mods.asuw.Buffs.BlackBlood.Description
+	}
+
+	WeaponCooldown: {
+		DisplayName: Weapon Cooldown
+		Description: You can't use any weapon skills!
+	}
+
+	HorusCooldown: {
+		DisplayName: Horus Cooldown
+		Description: Mods.asuw.Buffs.HorusCooldown.Description
+	}
+
+	MakotoCooldown: {
+		DisplayName: Makoto Cooldown
+		Description: Mods.asuw.Buffs.MakotoCooldown.Description
+	}
+
+	SubaruRapidFire: {
+		DisplayName: Subaru Rapid Fire
+		Description: Mods.asuw.Buffs.SubaruRapidFire.Description
+	}
+
+	SubaruCooldown: {
+		DisplayName: Subaru Cooldown
+		Description: Mods.asuw.Buffs.SubaruCooldown.Description
+	}
+
+	ShiDash: {
+		DisplayName: Shi Dash
+		Description: Mods.asuw.Buffs.ShiDash.Description
+	}
+
+	ShiCooldown: {
+		DisplayName: Shi Cooldown
+		Description: Mods.asuw.Buffs.ShiCooldown.Description
+	}
+
+	IronFire: {
+		DisplayName: Iron Fire
+		Description: Mods.asuw.Buffs.IronFire.Description
+	}
+
+	ProjectionDashCD: {
+		DisplayName: Projection Dash C D
+		Description: Mods.asuw.Buffs.ProjectionDashCD.Description
+	}
+
+	TheEndTargeted: {
+		Description: Mods.asuw.Buffs.TheEndTargeted.Description
+		DisplayName: The End Targeted
+	}
+
+	Pyro: {
+		DisplayName: Pyro
+		Description: Mods.asuw.Buffs.Pyro.Description
+	}
+
+	SerratedDebuff: {
+		DisplayName: Serrated Debuff
+		Description: Mods.asuw.Buffs.SerratedDebuff.Description
+	}
+
+	DestinedDeath: {
+		DisplayName: Destined Death
+		Description: Mods.asuw.Buffs.DestinedDeath.Description
+	}
+
+	MalikethsDestinedDeath: {
+		DisplayName: Malikeths Destined Death
+		Description: Mods.asuw.Buffs.MalikethsDestinedDeath.Description
+	}
+}
+
+Keybinds: {
+	ActivateAccessoryParry.DisplayName: Activate Accessory Parry
+	"Additional Skill Function.DisplayName": Additional  Skill  Function
+	"Corruption Eye Activation.DisplayName": Corruption  Eye  Activation
+}
+
+Configs: {
+	AsuConfig: {
+		DisplayName: Asu Config
+
+		DisableEnemyDebuffIcon: {
+			Label: Disable Enemy Debuff Icon
+			Tooltip: ""
+		}
+
+		DisableEnemyDebuffIconScaling: {
+			Label: Disable Enemy Debuff Icon Scaling
+			Tooltip: ""
+		}
+	}
+}
