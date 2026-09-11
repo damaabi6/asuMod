@@ -1,7 +1,10 @@
+using asuw.Content.Dusts;
 using asuw.Content.Projectiles;
-using asuw.Rarities;
+using asuw.Content.Rarities;
+using asuw.Effects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Terraria;
@@ -15,13 +18,13 @@ namespace asuw.Content.Items.Weapons.Ranged
 {
     public class SolemnLament : ModItem
     {
-        //TODO total rework, move projectiles here
+        //TODO skill
         public int timer = 0;
         public int AmmoSavedPercent = 60;
 
         public int[] Ammo = new int[2] { 10, 10 };
         public bool[] shoot = new bool[2] { false, false };
-        int[] proj = new int[2] { ModContent.ProjectileType<Solemn>(), ModContent.ProjectileType<Lament>() };
+        int[] proj = [ModContent.ProjectileType<Solemn>(), ModContent.ProjectileType<Lament>()];
         int index = 0;
 		
         public static readonly SoundStyle ShootW = new("asuw/Content/Sounds/Weapons/Ranged/solemn2") { Volume = 0.4f, MaxInstances = 4 };
@@ -49,7 +52,7 @@ namespace asuw.Content.Items.Weapons.Ranged
 			Item.shoot = ProjectileID.PurificationPowder;
 			Item.useAmmo = AmmoID.Bullet;
 			Item.value = Item.buyPrice(silver: 1);
-			Item.rare = ModContent.RarityType<CosmicPurple>();
+			Item.rare = ModContent.RarityType<BW>();
             Item.UseSound = null;
 			Item.autoReuse = true;
 			Item.noUseGraphic = true;
@@ -80,7 +83,7 @@ namespace asuw.Content.Items.Weapons.Ranged
 		{
             shoot[index] = true;
             SoundEngine.PlaySound((index == 0 ? ShootW : ShootB) with { MaxInstances = 2 }, player.Center);
-            Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI);
+            Projectile proj = Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.02f), type, damage, knockback, player.whoAmI);
             index = index == 0 ? 1 : 0;
             return false;
 		}
@@ -130,6 +133,7 @@ namespace asuw.Content.Items.Weapons.Ranged
         float recoil = 0;
         int reloadDur = 60;
         int reloadRanDir = 1;
+        float smearOP = 0;
         public override void AI()
         {
             if (heldWeapon() != null && !player.dead)
@@ -149,16 +153,16 @@ namespace asuw.Content.Items.Weapons.Ranged
                     {
                         heldWeapon().shoot[index] = false;
                         recoil = 30;
-
+                        shotEffects();
                         heldWeapon().Ammo[index]--;
                     }
                     Projectile.rotation = Projectile.velocity.ToRotation() + recoilRot;
                     player.SetHandRotFront(Projectile.rotation);
                     time = 0;
+                    smearOP = 0;
                 }
                 else
                 {
-
                     if (time < reloadDur / 2)
                     {
                         if (time == 0)
@@ -170,6 +174,8 @@ namespace asuw.Content.Items.Weapons.Ranged
                         float lerp = AsuUtils.QuartInOut(time / (reloadDur / 2));
                         Projectile.rotation = Projectile.velocity.ToRotation() + recoilRot + rotTo * lerp;
                         player.SetHandRotFront(Projectile.velocity.ToRotation() + recoilRot + handRotTo * lerp);
+                        float v = AsuUtils.PingPong(time, reloadDur / 2);
+                        smearOP = AsuUtils.QuartIn(v);
                     }
                     else
                     {
@@ -177,8 +183,8 @@ namespace asuw.Content.Items.Weapons.Ranged
                         float lerp = AsuUtils.SineOut((time - (reloadDur / 2)) / (reloadDur / 2));
                         Projectile.rotation = Projectile.velocity.ToRotation() + recoilRot + MathHelper.ToRadians(430 * reloadRanDir) + rotAmnt * lerp;
                         player.SetHandRotFront(Projectile.velocity.ToRotation() + recoilRot + MathHelper.ToRadians(70 * reloadRanDir) + rotAmnt * lerp);
+                        if (smearOP > 0) smearOP = 0;
                     }
-
                     if (time < reloadDur)
                         time++;
                     else
@@ -194,13 +200,37 @@ namespace asuw.Content.Items.Weapons.Ranged
         public override bool ShouldUpdatePosition() => false;
         public override bool PreDraw(ref Color lightColor)
         {
+            string texFlip = reloadRanDir * Projectile.spriteDirection == -1 ? "F" : string.Empty;
+            Texture2D smearTex = ModContent.Request<Texture2D>($"asuw/Assets/Particles/Twirl1NoBg{texFlip}", AssetRequestMode.ImmediateLoad).Value;
             SpriteEffects effects = Projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipVertically;
             Texture2D texture = TextureAssets.Projectile[Type].Value;
             Vector2 origin = new Vector2(texture.Width * 0.13f, texture.Height * 0.5f);
             float rotOffset = MathHelper.ToRadians(Projectile.direction == 1 ? 45 : -45);
+            Main.spriteBatch.UseBlendState(BlendState.NonPremultiplied);
+            Main.spriteBatch.Draw(smearTex, Projectile.Center - Main.screenPosition, default, Color.Black * Projectile.Opacity * smearOP, Projectile.rotation, smearTex.Size() / 2f, Projectile.scale * 0.24f, effects, 0);
+            Main.spriteBatch.ExitShaderRegion();
             Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, default, lightColor * Projectile.Opacity, Projectile.rotation, origin, Projectile.scale, effects, 0);
             
+            Main.spriteBatch.ExitShaderRegion();
             return false;
+        }
+
+        void shotEffects()
+        {
+            Vector2 dustPos = Projectile.Center + player.velocity + Projectile.velocity.normalize().RotatedBy(-0.15f * Projectile.direction) * 65;
+            Color dustColor = Color.Black;
+            Dust dust = Dust.NewDustPerfect(dustPos, ModContent.DustType<LightRingNP>(), (Projectile.velocity.normalize() * 0.2f), 0, dustColor, 4f);
+            dust.noGravity = true;
+            dust.fadeIn = 0.2f;
+            Dust dust2 = Dust.NewDustPerfect(dustPos + Projectile.velocity.normalize() * -25, ModContent.DustType<MuzzleFlashNP>(), (Projectile.velocity.normalize() * 4), 0, dustColor, 1f);
+            dust2.noGravity = true;
+            dust2.fadeIn = 0.5f;
+            for (int i = 1; i <= 8; i++)
+            {
+                Vector2 butterflyVel = i < 4 ? (Projectile.velocity.normalize() * Main.rand.NextFloat(7, 21)).RotatedByRandom(0.4f) : (Projectile.velocity.normalize() * Main.rand.NextFloat(5, 16)).RotatedBy(MathHelper.PiOver4 * (i % 2 == 0 ? 1 : -1)).RotatedByRandom(0.4f);
+                Dust dust3 = Dust.NewDustPerfect(dustPos, ModContent.DustType<ButterflyBlack>(), butterflyVel, 0, Color.White, Main.rand.NextFloat(0.5f, 1));
+                dust3.noGravity = true;
+            }
         }
     }
 
@@ -231,6 +261,7 @@ namespace asuw.Content.Items.Weapons.Ranged
         float recoil = 0;
         int reloadDur = 60;
         int reloadRanDir = 1;
+        float smearOP = 0;
         public override void AI()
         {
             if (heldWeapon() != null && !player.dead)
@@ -248,13 +279,14 @@ namespace asuw.Content.Items.Weapons.Ranged
                     {
                         heldWeapon().shoot[index] = false;
                         recoil = 30;
-
+                        shotEffects();
                         heldWeapon().Ammo[index]--;
                     }
 
                     Projectile.rotation = Projectile.velocity.ToRotation() + recoilRot;
                     player.SetHandRotBack(Projectile.rotation);
                     time = 0;
+                    smearOP = 0;
                 }
                 else
                 {
@@ -269,6 +301,8 @@ namespace asuw.Content.Items.Weapons.Ranged
                         float lerp = AsuUtils.QuartInOut(time / (reloadDur / 2));
                         Projectile.rotation = Projectile.velocity.ToRotation() + recoilRot + rotTo * lerp;
                         player.SetHandRotBack(Projectile.velocity.ToRotation() + recoilRot + handRotTo * lerp);
+                        float v = AsuUtils.PingPong(time, reloadDur / 2);
+                        smearOP = AsuUtils.QuartIn(v);
                     }
                     else
                     {
@@ -276,6 +310,7 @@ namespace asuw.Content.Items.Weapons.Ranged
                         float lerp = AsuUtils.SineOut((time - (reloadDur / 2)) / (reloadDur / 2));
                         Projectile.rotation = Projectile.velocity.ToRotation() + recoilRot + MathHelper.ToRadians(430 * reloadRanDir) + rotAmnt * lerp;
                         player.SetHandRotBack(Projectile.velocity.ToRotation() + recoilRot + MathHelper.ToRadians(70 * reloadRanDir) + rotAmnt * lerp);
+                        smearOP = 0;
                     }
 
                     if (time < reloadDur)
@@ -313,12 +348,37 @@ namespace asuw.Content.Items.Weapons.Ranged
             if (projectile == null)
                 return;
 
-            SpriteEffects effects = projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipVertically;
-            Texture2D texture = TextureAssets.Projectile[projectile.type].Value;
-            Vector2 origin = new Vector2(texture.Width * 0.13f, texture.Height * 0.5f);
-            DrawData draw = new DrawData(texture, projectile.Center - Main.screenPosition, default, lightColor * projectile.Opacity, projectile.rotation, origin, projectile.scale, effects, 0);
+            if (projectile.ModProjectile is Solemn solemn)
+            {
+                string texFlip = solemn.reloadRanDir * projectile.spriteDirection == -1 ? "F" : string.Empty;
+                Texture2D smearTex = ModContent.Request<Texture2D>($"asuw/Assets/Particles/Twirl1{texFlip}", AssetRequestMode.ImmediateLoad).Value;
+                SpriteEffects effects = projectile.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipVertically;
+                Texture2D texture = TextureAssets.Projectile[projectile.type].Value;
+                Vector2 origin = new Vector2(texture.Width * 0.13f, texture.Height * 0.5f);
+                DrawData drawSmear = new DrawData(smearTex, projectile.Center - Main.screenPosition, default, Color.White with { A = 0 } * projectile.Opacity * solemn.smearOP, projectile.rotation, smearTex.Size() / 2f, projectile.scale * 0.24f, effects, 0);
+                DrawData draw = new DrawData(texture, projectile.Center - Main.screenPosition, default, lightColor * projectile.Opacity, projectile.rotation, origin, projectile.scale, effects, 0);
 
-            drawInfo.DrawDataCache.Add(draw);
+                drawInfo.DrawDataCache.Add(drawSmear);
+                drawInfo.DrawDataCache.Add(draw);
+            }
+        }
+
+        void shotEffects()
+        {
+            Vector2 dustPos = Projectile.Center + player.velocity + Projectile.velocity.normalize().RotatedBy(-0.15f * Projectile.direction) * 65;
+            Color dustColor = Color.White;
+            Dust dust = Dust.NewDustPerfect(dustPos, ModContent.DustType<LightRingNP>(), (Projectile.velocity.normalize() * 0.2f), 0, dustColor, 4f);
+            dust.noGravity = true;
+            dust.fadeIn = 0.2f;
+            Dust dust2 = Dust.NewDustPerfect(dustPos + Projectile.velocity.normalize() * -25, ModContent.DustType<MuzzleFlashNP>(), (Projectile.velocity.normalize() * 4), 0, dustColor, 1f);
+            dust2.noGravity = true;
+            dust2.fadeIn = 0.5f;
+            for (int i = 1; i <= 8; i++)
+            {
+                Vector2 butterflyVel = i < 4 ? (Projectile.velocity.normalize() * Main.rand.NextFloat(7, 21)).RotatedByRandom(0.4f) : (Projectile.velocity.normalize() * Main.rand.NextFloat(5, 16)).RotatedBy(MathHelper.PiOver4 * (i % 2 == 0 ? 1 : -1)).RotatedByRandom(0.4f);
+                Dust dust3 = Dust.NewDustPerfect(dustPos, ModContent.DustType<ButterflyWhite>(), butterflyVel, 0, Color.White, Main.rand.NextFloat(0.5f, 1));
+                dust3.noGravity = true;
+            }
         }
     }
 

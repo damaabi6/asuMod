@@ -9,7 +9,7 @@ using Terraria.GameContent;
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
 
-namespace asuw.Content.UI
+namespace asuw.Content.DrawLayers.UI
 {
     public static class HorusUI
     {

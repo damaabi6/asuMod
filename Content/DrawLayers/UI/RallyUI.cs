@@ -10,7 +10,7 @@ using Terraria.GameContent;
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
 
-namespace asuw.Content.UI
+namespace asuw.Content.DrawLayers.UI
 {
     public static class RallyUI
     {
@@ -28,7 +28,7 @@ namespace asuw.Content.UI
                 //textures
                 Texture2D icon = ModContent.Request<Texture2D>("asuw/Assets/Rally", AssetRequestMode.AsyncLoad).Value;
                 //Pos
-                Vector2 pos = new Vector2(Main.screenWidth - Main.UIScale * (328f), Main.UIScale * 17f) + icon.Size() * 0.5f;
+                Vector2 pos = new Vector2(Main.screenWidth - Main.UIScale * 328f, Main.UIScale * 17f) + icon.Size() * 0.5f;
                 Vector2 textArea = FontAssets.MouseText.Value.MeasureString(healText);
                 Vector2 textDrawPosition = pos + new Vector2(6f, 16f) - textArea * 0.5f;
 

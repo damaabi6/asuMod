@@ -146,8 +146,12 @@ namespace asuw.Content.Items.Weapons
             if (!player.active || player.dead)
                 return;
 
-            if(player.HeldItem.ModItem != null && player.HeldItem.ModItem is SOL sol)
+            if (player.equippedWings == null || player.equippedWings.ModItem.Type != ModContent.ItemType<CoreOfSupernova>())
+                return;
+
+            if (player.HeldItem.ModItem != null && player.HeldItem.ModItem is SOL sol)
             {
+                Texture2D chargeBarFrame = ModContent.Request<Texture2D>("asuw/Assets/Particles/trace_01").Value;
                 Vector2 pos = player.MountedCenter + Vector2.UnitX * 100;
                 for(int i = 0; i < 12; i++)
                 {
@@ -372,12 +376,8 @@ namespace asuw.Content.Items.Weapons
             player.asuw().SOLChargeUpActivated = true;
             for (int i = 1; i <= 4; i++)
             {
-                float offsetX = 60 * (i / 2f);
-                float offsetY = 40 * (i / 2f);
-                Vector2 offset = Utils.NextVector2CircularEdge(Main.rand, offsetX, offsetY);
-                Vector2 size = new Vector2(Main.rand.Next(40, 50), Main.rand.Next(40, 50)) * MathHelper.Lerp(1, 0.65f, i / 4f);
-                windowPos.Add(offset);
-                windowSize.Add(size);
+                int type = ModContent.ProjectileType<SOLWidgets>();
+                Projectile.NewProjectile(player.GetSource_FromThis(), player.MountedCenter, Vector2.Zero, type, 1, 1, player.whoAmI, Projectile.whoAmI, i);
             }
         }
         public override void AI()
@@ -412,6 +412,11 @@ namespace asuw.Content.Items.Weapons
                 player.asuw().SOLChargeUpActivated = false;
             }
             CombatText.NewText(player.Hitbox, Color.Red, heldWeapon().hikariyoCharge);
+        }
+
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
+        {
+            overPlayers.Add(index);
         }
         public override bool PreDraw(ref Color lightColor)
         {
@@ -459,8 +464,8 @@ namespace asuw.Content.Items.Weapons
             
             Texture2D TechnoScan = ModContent.Request<Texture2D>("asuw/Assets/Noise/Techno2", AssetRequestMode.AsyncLoad).Value;
             Texture2D TechnoScan2 = ModContent.Request<Texture2D>("asuw/Assets/Noise/Techno", AssetRequestMode.AsyncLoad).Value;
-            Texture2D Window = ModContent.Request<Texture2D>("asuw/Assets/UIElements/TechyFrame", AssetRequestMode.AsyncLoad).Value;
-            Texture2D WindowText = ModContent.Request<Texture2D>("asuw/Assets/UIElements/TextScroll", AssetRequestMode.AsyncLoad).Value;
+            //Texture2D Window = ModContent.Request<Texture2D>("asuw/Assets/UIElements/TechyFrame", AssetRequestMode.AsyncLoad).Value;
+            //Texture2D WindowText = ModContent.Request<Texture2D>("asuw/Assets/UIElements/TextScroll", AssetRequestMode.AsyncLoad).Value;
             List<ColoredVertex> vertices = new List<ColoredVertex>();
             for (int i = 0; i < 20; i++)
             {
@@ -484,38 +489,117 @@ namespace asuw.Content.Items.Weapons
             gd.DrawUserPrimitives(PrimitiveType.TriangleStrip, vertices.ToArray(), 0, vertices.Count - 2);
             Main.spriteBatch.ExitShaderRegion();
 
-            for (int i = 0; i < windowPos.Count; i++)
-            {
-                List<ColoredVertex> windows = new List<ColoredVertex>();
-                List<ColoredVertex> texts = new List<ColoredVertex>();
-                for (int j = 0; j < 20; j++)
-                {
-                    for (int k = 0; k < 2; k++)
-                    {
-                        Vector2 pos = player.MountedCenter + windowPos[i] - Main.screenPosition - Vector2.UnitX * windowSize[i].X + Vector2.UnitX * (windowSize[i].X / 10f) * j;
-                        Vector2 posY = pos - Vector2.UnitY * windowSize[i].Y * (k == 0 ? 1 : -1);
-                        Vector3 coords = new Vector3(j / (20f - 1f), k, 1);
-                        windows.Add(new ColoredVertex(posY, coords, Color.AliceBlue));
-                        Vector2 posT = player.MountedCenter + windowPos[i] - Main.screenPosition - Vector2.UnitX * (windowSize[i].X * 0.65f) + Vector2.UnitX * ((windowSize[i].X * 0.65f) / 10f) * j;
-                        Vector2 posYT = posT - Vector2.UnitY * (windowSize[i].Y * 0.65f) * (k == 0 ? 1 : -1);
-                        texts.Add(new ColoredVertex(posYT, coords, Color.AliceBlue));
-                    }
-                }
-                //ShaderFunctions.vertexScanUp(Main.spriteBatch, Color.DodgerBlue, Color.SkyBlue, scanOP, AsuUtils.QuadInOut(t), 0.4f);
-                ShaderFunctions.vertexColorBloom(Main.spriteBatch, Color.RoyalBlue, Color.DodgerBlue, scanOP * 0.6f);
-                gd.Textures[0] = Window;
-                gd.DrawUserPrimitives(PrimitiveType.TriangleStrip, windows.ToArray(), 0, windows.Count - 2);
-                Main.spriteBatch.ExitShaderRegion();
+            //for (int i = 0; i < windowPos.Count; i++)
+            //{
+            //    List<ColoredVertex> windows = new List<ColoredVertex>();
+            //    List<ColoredVertex> texts = new List<ColoredVertex>();
+            //    for (int j = 0; j < 20; j++)
+            //    {
+            //        for (int k = 0; k < 2; k++)
+            //        {
+            //            Vector2 pos = player.MountedCenter + windowPos[i] - Main.screenPosition - Vector2.UnitX * windowSize[i].X + Vector2.UnitX * (windowSize[i].X / 10f) * j;
+            //            Vector2 posY = pos - Vector2.UnitY * windowSize[i].Y * (k == 0 ? 1 : -1);
+            //            Vector3 coords = new Vector3(j / (20f - 1f), k, 1);
+            //            windows.Add(new ColoredVertex(posY, coords, Color.AliceBlue));
+            //            Vector2 posT = player.MountedCenter + windowPos[i] - Main.screenPosition - Vector2.UnitX * (windowSize[i].X * 0.65f) + Vector2.UnitX * ((windowSize[i].X * 0.65f) / 10f) * j;
+            //            Vector2 posYT = posT - Vector2.UnitY * (windowSize[i].Y * 0.65f) * (k == 0 ? 1 : -1);
+            //            texts.Add(new ColoredVertex(posYT, coords, Color.AliceBlue));
+            //        }
+            //    }
+            //    //ShaderFunctions.vertexScanUp(Main.spriteBatch, Color.DodgerBlue, Color.SkyBlue, scanOP, AsuUtils.QuadInOut(t), 0.4f);
+            //    ShaderFunctions.vertexColorBloom(Main.spriteBatch, Color.RoyalBlue, Color.DodgerBlue, scanOP * 0.6f);
+            //    gd.Textures[0] = Window;
+            //    gd.DrawUserPrimitives(PrimitiveType.TriangleStrip, windows.ToArray(), 0, windows.Count - 2);
+            //    Main.spriteBatch.ExitShaderRegion();
 
-                ShaderFunctions.vertexScrollUp(Main.spriteBatch, Color.RoyalBlue, Color.DodgerBlue, scanOP * 0.6f);
-                gd.Textures[0] = WindowText;
-                gd.DrawUserPrimitives(PrimitiveType.TriangleStrip, texts.ToArray(), 0, texts.Count - 2);
-                Main.spriteBatch.ExitShaderRegion();
-            }
+            //    ShaderFunctions.vertexScrollUp(Main.spriteBatch, Color.RoyalBlue, Color.DodgerBlue, scanOP * 0.6f);
+            //    gd.Textures[0] = WindowText;
+            //    gd.DrawUserPrimitives(PrimitiveType.TriangleStrip, texts.ToArray(), 0, texts.Count - 2);
+            //    Main.spriteBatch.ExitShaderRegion();
+            //}
 
             return false;
         }
 
+    }
+
+    public class SOLWidgets : ModProjectile
+    {
+        Player player => Projectile.GetOwner();
+        public override string Texture => "asuw/Assets/Blank";
+        public ref float time => ref Projectile.ai[2];
+        public ref float owner => ref Projectile.ai[0];
+        public ref float index => ref Projectile.ai[1];
+        Vector2 windowPos;
+        Vector2 windowSize;
+        float duration = 60;
+        bool drawBehind;
+        public override void SetDefaults()
+        {
+            Projectile.FriendlySetDefaults(DamageClass.Magic, false, -1);
+            Projectile.friendly = false;
+            Projectile.timeLeft = 10;
+        }
+        public override void OnSpawn(IEntitySource source)
+        {
+            float offsetX = 60 * (index / 2f);
+            float offsetY = 40 * (index / 2f);
+            windowPos = Utils.NextVector2CircularEdge(Main.rand, offsetX, offsetY);
+            windowSize = new Vector2(Main.rand.Next(40, 50), Main.rand.Next(40, 50)) * MathHelper.Lerp(1, 0.65f, index / 4f);
+            duration *= Main.rand.NextFloat(0.9f, 1.1f);
+            drawBehind = Main.rand.NextBool();
+        }
+
+        public override void AI()
+        {
+            Projectile.Center = player.MountedCenter;
+            if (time < duration && Main.projectile[(int)owner].active)
+                Projectile.timeLeft = 2;
+
+            time++;
+        }
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
+        {
+            if(!drawBehind)
+                overPlayers.Add(index);
+        }
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D Window = ModContent.Request<Texture2D>("asuw/Assets/UIElements/TechyFrame", AssetRequestMode.AsyncLoad).Value;
+            Texture2D WindowText = ModContent.Request<Texture2D>("asuw/Assets/UIElements/TextScroll", AssetRequestMode.AsyncLoad).Value;
+
+            List<ColoredVertex> windows = new List<ColoredVertex>();
+            List<ColoredVertex> texts = new List<ColoredVertex>();
+            for (int j = 0; j < 20; j++)
+            {
+                for (int k = 0; k < 2; k++)
+                {
+                    Vector2 pos = player.MountedCenter + windowPos - Main.screenPosition - Vector2.UnitX * windowSize.X + Vector2.UnitX * (windowSize.X / 10f) * j;
+                    Vector2 posY = pos - Vector2.UnitY * windowSize.Y * (k == 0 ? 1 : -1);
+                    Vector3 coords = new Vector3(j / (20f - 1f), k, 1);
+                    windows.Add(new ColoredVertex(posY, coords, Color.AliceBlue));
+                    Vector2 posT = player.MountedCenter + windowPos - Main.screenPosition - Vector2.UnitX * (windowSize.X * 0.65f) + Vector2.UnitX * ((windowSize.X * 0.65f) / 10f) * j;
+                    Vector2 posYT = posT - Vector2.UnitY * (windowSize.Y * 0.65f) * (k == 0 ? 1 : -1);
+                    texts.Add(new ColoredVertex(posYT, coords, Color.AliceBlue));
+                }
+            }
+            float v = AsuUtils.PingPong(time, duration);
+            float scanOP = AsuUtils.QuadOut(v);
+            var gd = Main.graphics.GraphicsDevice;
+
+            ShaderFunctions.vertexColorBloom(Main.spriteBatch, Color.RoyalBlue, Color.DodgerBlue, scanOP * 0.6f);
+            gd.Textures[0] = Window;
+            gd.DrawUserPrimitives(PrimitiveType.TriangleStrip, windows.ToArray(), 0, windows.Count - 2);
+            Main.spriteBatch.ExitShaderRegion();
+
+            ShaderFunctions.vertexScrollUp(Main.spriteBatch, Color.RoyalBlue, Color.DodgerBlue, scanOP * 0.6f);
+            gd.Textures[0] = WindowText;
+            gd.DrawUserPrimitives(PrimitiveType.TriangleStrip, texts.ToArray(), 0, texts.Count - 2);
+            Main.spriteBatch.ExitShaderRegion();
+            
+
+            return false;
+        }
     }
 
     public class SOLHikariyo : ModProjectile

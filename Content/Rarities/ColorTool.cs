@@ -2,21 +2,19 @@
 using Terraria;
 using Terraria.ModLoader;
 
-namespace asuw.Rarities
+namespace asuw.Content.Rarities
 {
     public sealed class ColorTool : GlobalItem
     {
-        public static int RarityCosmicPurple => ModContent.GetInstance<CosmicPurple>().Type;
-
-
+        public static int BWrare => ModContent.GetInstance<BW>().Type;
 
         public override bool PreDrawTooltipLine(Item Item, DrawableTooltipLine line, ref int yOffset)
         {
             if (line.Mod == "Terraria" && line.Name == "ItemName" /*&& CalamityClientConfig.Instance.TextEffects*/)
             {
-                if (Item.rare == RarityCosmicPurple)
+                if (Item.rare == BWrare)
                 {
-                    CosmicPurple.Draw(Item, line);
+                    BW.Draw(Item, line);
                     return false;
                 }
             }

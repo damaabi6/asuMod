@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using ReLogic.Graphics;
 using Terraria;
 using Terraria.GameContent;
@@ -10,9 +11,9 @@ using Terraria.ModLoader;
 using Terraria.UI.Chat;
 using Terraria.Utilities;
 
-namespace asuw.Rarities
+namespace asuw.Content.Rarities
 {
-    public class CosmicPurple : ModRarity
+    public class BW : ModRarity
     {
         // Cosmic Purple is the rarity for Post-DoG gear.
         // It is a unique rarity and does not have its items rarity change on reforge.
@@ -56,8 +57,8 @@ namespace asuw.Rarities
         public static void Draw(Item Item, SpriteBatch spriteBatch, string text, int X, int Y, Color textColor, Color lightColor, float rotation,
             Vector2 origin, Vector2 baseScale, float time, DynamicSpriteFont font)
         {
-            var crystalTextGlow = ModContent.Request<Texture2D>("asuw/Rarities/CrystalTextGlow").Value;
-            var sparkle = ModContent.Request<Texture2D>("asuw/Rarities/CrystalTextSparkle").Value;
+            var crystalTextGlow = ModContent.Request<Texture2D>("asuw/Content/Rarities/CrystalTextGlow", AssetRequestMode.AsyncLoad).Value;
+            var sparkle = ModContent.Request<Texture2D>("asuw/Content/Rarities/CrystalTextSparkle", AssetRequestMode.AsyncLoad).Value;
             var fontSize = ChatManager.GetStringSize(font, text, new Vector2(1));
             var center = fontSize / 2f;
             if (Item.expert) textColor = Main.DiscoColor;

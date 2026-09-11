@@ -1,4 +1,5 @@
 ﻿using asuw.Content.Buffs;
+using asuw.Content.Dusts;
 using asuw.Content.Global;
 using asuw.Content.Items.Weapons;
 using asuw.Content.Projectiles;
@@ -36,12 +37,13 @@ namespace asuw.Content
 
         public override void OnSpawn(Projectile projectile, IEntitySource source)
         {
-            Player player = Main.player[projectile.owner];
+            Player player = projectile.GetOwner();
 
             if (projectile.asuw().horusCharged)
             {
                 projectile.velocity *= 2f;
             }
+
         }
 
         public override bool PreAI(Projectile projectile)

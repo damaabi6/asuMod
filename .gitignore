@@ -2,7 +2,7 @@
 bin/
 obj/
 
-* text=auto eol=lf
+*text=auto eol=lf
 
 # tModLoader compiled output
 *.tmod

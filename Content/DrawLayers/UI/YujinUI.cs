@@ -10,7 +10,7 @@ using Terraria.Graphics;
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
 
-namespace asuw.Content.UI
+namespace asuw.Content.DrawLayers.UI
 {
     public static class YujinUI
     {
@@ -31,7 +31,7 @@ namespace asuw.Content.UI
                 Texture2D TextBG = ModContent.Request<Texture2D>("asuw/Content/Textures/Chargedowns/EyeOfDeathTextBG", AssetRequestMode.AsyncLoad).Value;
 
                 //text Value
-                string eyeOfDeathText = Math.Abs(((int)yu.ShiDMGInc)).ToString();
+                string eyeOfDeathText = Math.Abs((int)yu.ShiDMGInc).ToString();
                 string healText = yu.heal.ToString();
                 //icon Pos
                 Vector2 eyeOfDeathIconCenter = new Vector2(Main.screenWidth * 0.5f - 40f,
@@ -56,8 +56,8 @@ namespace asuw.Content.UI
                     spriteBatch.Draw(Mad, eyeOfDeathIconCenter, null, Color.White, 0f, Mad.Size() * 0.5f, Main.UIScale, 0, 0f);
                 }
                 // Draw the amount 
-                ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.MouseText.Value, eyeOfDeathText, eyeOfDeathTextDrawPosition - (eyeOfDeathTextArea * 0.5f) + new Vector2(-1.5f,1), textCol, 0f, Vector2.Zero, Vector2.One * Main.UIScale * 1.2f);
-                ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.MouseText.Value, healText, eyeOfDeathTextDrawPosition - (eyeOfDeathTextArea * 0.5f) + new Vector2(-90f, 1), Color.Red, 0f, Vector2.Zero, Vector2.One * Main.UIScale * 1.2f);
+                ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.MouseText.Value, eyeOfDeathText, eyeOfDeathTextDrawPosition - eyeOfDeathTextArea * 0.5f + new Vector2(-1.5f,1), textCol, 0f, Vector2.Zero, Vector2.One * Main.UIScale * 1.2f);
+                ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.MouseText.Value, healText, eyeOfDeathTextDrawPosition - eyeOfDeathTextArea * 0.5f + new Vector2(-90f, 1), Color.Red, 0f, Vector2.Zero, Vector2.One * Main.UIScale * 1.2f);
             }
         }
     }

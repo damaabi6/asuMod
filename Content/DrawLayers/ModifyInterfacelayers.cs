@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using asuw.Content.DrawLayers.UI;
 using asuw.Content.Items.Weapons.Melee;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace asuw.Content.UI
+namespace asuw.Content.DrawLayers
 {
     public class ModifyInterfacelayers : ModSystem
     {
