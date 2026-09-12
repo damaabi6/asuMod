@@ -1,4 +1,5 @@
 using asuw.Content.Dusts;
+using asuw.Content.Items.Ammos;
 using asuw.Content.Projectiles;
 using asuw.Content.Rarities;
 using asuw.Effects;
@@ -71,10 +72,13 @@ namespace asuw.Content.Items.Weapons.Ranged
 		}
 
         public override bool CanUseItem(Player player) => (Ammo[index] > 0);
-        public override bool CanConsumeAmmo(Item ammo, Player player) => Main.rand.Next(100) > 22;
+        public override bool CanConsumeAmmo(Item ammo, Player player) => Main.rand.Next(100) > 40;
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
+            if (type == ProjectileID.Bullet)
+                type = ModContent.ProjectileType<HitscanProj>();
+            
             int dir = velocity.X > 0 ? 1 : -1;
             position += velocity.RotatedBy(MathHelper.ToRadians(-6 * dir)) * 2;
             position += velocity.normalize() * -50;
@@ -83,7 +87,16 @@ namespace asuw.Content.Items.Weapons.Ranged
 		{
             shoot[index] = true;
             SoundEngine.PlaySound((index == 0 ? ShootW : ShootB) with { MaxInstances = 2 }, player.Center);
-            Projectile proj = Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.02f), type, damage, knockback, player.whoAmI);
+            int Damage = damage;
+            float ai0 = 0;
+            float ai1 = 0;
+            if(type == ModContent.ProjectileType<HitscanProj>())
+            {
+                ai0 = 100;
+                ai1 = 30;
+                Damage = (int)(Damage * 0.8f);
+            }
+            Projectile proj = Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.02f), type, Damage, knockback, player.whoAmI, ai0, ai1);
             index = index == 0 ? 1 : 0;
             return false;
 		}
