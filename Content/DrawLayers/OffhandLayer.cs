@@ -14,7 +14,7 @@ namespace asuw.Content.DrawLayers
     {
         public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.OffhandAcc);
 
-        public override bool GetDefaultVisibility(PlayerDrawSet drawInfo) => drawInfo.drawPlayer.HeldItem != null;
+        public override bool GetDefaultVisibility(PlayerDrawSet drawInfo) => drawInfo.drawPlayer.HeldItem != null && drawInfo.shadow == 0;
 
         protected override void Draw(ref PlayerDrawSet drawInfo)
         {

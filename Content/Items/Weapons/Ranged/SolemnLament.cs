@@ -77,7 +77,7 @@ namespace asuw.Content.Items.Weapons.Ranged
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
             if (type == ProjectileID.Bullet)
-                type = ModContent.ProjectileType<HitscanProj>();
+                type = ModContent.ProjectileType<HitscanProjinf>();
             
             int dir = velocity.X > 0 ? 1 : -1;
             position += velocity.RotatedBy(MathHelper.ToRadians(-6 * dir)) * 2;
@@ -90,13 +90,17 @@ namespace asuw.Content.Items.Weapons.Ranged
             int Damage = damage;
             float ai0 = 0;
             float ai1 = 0;
-            if(type == ModContent.ProjectileType<HitscanProj>())
+            float ai2 = 0;
+            Vector2 finalVelocity = velocity.RotatedByRandom(0.02f); //for consistent velocity for the 2 hitscan projectiles
+            if (type == ModContent.ProjectileType<HitscanProjinf>())
             {
-                ai0 = 100;
-                ai1 = 30;
+                ai0 = 100; // length
+                ai1 = 70; // width
+                ai2 = 40; // lifetime (20 maxupdates)
                 Damage = (int)(Damage * 0.8f);
+                Projectile.NewProjectile(source, position, finalVelocity, ModContent.ProjectileType<HitscanProj>(), damage, knockback, player.whoAmI, ai0, ai1, ai2);
             }
-            Projectile proj = Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.02f), type, Damage, knockback, player.whoAmI, ai0, ai1);
+            Projectile.NewProjectile(source, position, finalVelocity, type, Damage, knockback, player.whoAmI, ai0, ai1, ai2);
             index = index == 0 ? 1 : 0;
             return false;
 		}
@@ -355,7 +359,6 @@ namespace asuw.Content.Items.Weapons.Ranged
                     projectile = proj;
                     break;
                 }
-
             }
 
             if (projectile == null)

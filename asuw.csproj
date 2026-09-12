@@ -8,8 +8,16 @@
 	  <LangVersion>preview</LangVersion>
 	</PropertyGroup>
 	<ItemGroup>
+	  <AdditionalFiles Remove="Enums\**" />
+	  <Compile Remove="Enums\**" />
+	  <EmbeddedResource Remove="Enums\**" />
+	  <None Remove="Enums\**" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Include=".gitignore" />
+	</ItemGroup>
+	<ItemGroup>
 	  <Folder Include="Content\Textures\Extra\" />
-	  <Folder Include="Enums\" />
 	</ItemGroup>
 
 	<!-- References -->

@@ -31,6 +31,7 @@ namespace asuw.Content.Items.Weapons
         public int blasterTime = 0;
         public float blasterRotTo = 0;
         public int blasterPhase = 0;
+        int oldHikariyoCharge = 0;
         public int hikariyoCharge = 0;
         public float chargeBarOP = 0;
         public float[] individualBarsOP = new float[12] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -122,7 +123,10 @@ namespace asuw.Content.Items.Weapons
             if (blasterTime > 0) blasterTime--;
             else blasterRotTo = 0;
 
-            for(int i = 0; i < hikariyoCharge; i++)
+            if (chargeBarOP > 0)
+                chargeBarOP = Math.Clamp(chargeBarOP - 0.05f, 0, 1);
+   
+            for (int i = 0; i < hikariyoCharge; i++)
             {
                 individualBarsOP[i] = individualBarsOP[i].Towards(1, 0.05f); 
             }
@@ -139,9 +143,9 @@ namespace asuw.Content.Items.Weapons
             }
         }
 
-        internal static void DrawBar()
+        public static void DrawBar(ref PlayerDrawSet drawInfo)
         {
-            Player player = Main.LocalPlayer;
+            Player player = drawInfo.drawPlayer;
 
             if (!player.active || player.dead)
                 return;
@@ -151,15 +155,18 @@ namespace asuw.Content.Items.Weapons
 
             if (player.HeldItem.ModItem != null && player.HeldItem.ModItem is SOL sol)
             {
-                Texture2D chargeBarFrame = ModContent.Request<Texture2D>("asuw/Assets/Particles/trace_01").Value;
-                Vector2 pos = player.MountedCenter + Vector2.UnitX * 100;
-                for(int i = 0; i < 12; i++)
+                Texture2D chargeBarFrame = ModContent.Request<Texture2D>("asuw/Assets/UIElements/SupernovaCharge/SupernovaBarFrame", AssetRequestMode.AsyncLoad).Value;
+                Vector2 pos = player.MountedCenter - Main.screenPosition + Vector2.UnitX * 200;
+                DrawData drawFrame = new DrawData(chargeBarFrame, pos, null, Color.White * sol.individualBarsOP[0] * sol.chargeBarOP, 0, chargeBarFrame.Size() / 2f, 1f, SpriteEffects.None, 0);
+                drawInfo.DrawDataCache.Add(drawFrame);
+                for (int i = 0; i < 12; i++)
                 {
-                    Vector2 barPos = pos + Vector2.UnitY * 40 * i;
-                    Color color = Color.DodgerBlue * sol.individualBarsOP[i];
+                    Texture2D chargeBar = ModContent.Request<Texture2D>($"asuw/Assets/UIElements/SupernovaCharge/SupernovaBarCharge{i + 1}", AssetRequestMode.AsyncLoad).Value;
+                    DrawData drawBars = new DrawData(chargeBar, pos, null, Color.White * sol.individualBarsOP[i] * sol.chargeBarOP, 0, chargeBar.Size() / 2f, 1f, SpriteEffects.None, 0);
+
+                    drawInfo.DrawDataCache.Add(drawBars);
                 }
             }
-
 
         }
 
@@ -395,6 +402,7 @@ namespace asuw.Content.Items.Weapons
             if (time == (int)(duration / 2f))
                 if(heldWeapon().hikariyoCharge < 12) heldWeapon().hikariyoCharge++;
 
+            heldWeapon().chargeBarOP = AsuUtils.QuartOut(t);
             playerWing().purple = ((float)heldWeapon().hikariyoCharge / 24f) * (1 - AsuUtils.QuartIn(t));
             playerWing().bloomRotStrength = Main.rand.NextFloat(0.8f, 0.9f) * (1 - AsuUtils.QuartIn(t));
             playerWing().thrusterStrengthOverride = 1;
@@ -410,6 +418,7 @@ namespace asuw.Content.Items.Weapons
             {
                 if (heldWeapon().hikariyoCharge < 12) heldWeapon().hikariyoCharge++;
                 player.asuw().SOLChargeUpActivated = false;
+                heldWeapon().chargeBarOP = 1;
             }
             CombatText.NewText(player.Hitbox, Color.Red, heldWeapon().hikariyoCharge);
         }
@@ -578,7 +587,7 @@ namespace asuw.Content.Items.Weapons
                     Vector2 posY = pos - Vector2.UnitY * windowSize.Y * (k == 0 ? 1 : -1);
                     Vector3 coords = new Vector3(j / (20f - 1f), k, 1);
                     windows.Add(new ColoredVertex(posY, coords, Color.AliceBlue));
-                    Vector2 posT = player.MountedCenter + windowPos - Main.screenPosition - Vector2.UnitX * (windowSize.X * 0.65f) + Vector2.UnitX * ((windowSize.X * 0.65f) / 10f) * j;
+                    Vector2 posT = player.MountedCenter + windowPos - Main.screenPosition - Vector2.UnitX * (windowSize.X * 0.7f) + Vector2.UnitX * ((windowSize.X * 0.6f) / 10f) * j;
                     Vector2 posYT = posT - Vector2.UnitY * (windowSize.Y * 0.65f) * (k == 0 ? 1 : -1);
                     texts.Add(new ColoredVertex(posYT, coords, Color.AliceBlue));
                 }
@@ -697,7 +706,7 @@ namespace asuw.Content.Items.Weapons
                 playerWing().bloomRotStrength = Main.rand.NextFloat(0.8f,1f) * AsuUtils.ExpoOut(lerp);
                 playerWing().thrusterStrengthOverride = 1;
                 heldWeapon().hikariyoCharge = (int)MathHelper.Lerp(initialCharge, 0, time / duration);
-                
+                heldWeapon().chargeBarOP = heldWeapon().chargeBarOP.Towards(1, 0.1f);
             }
             //---------------------------------------------||
 

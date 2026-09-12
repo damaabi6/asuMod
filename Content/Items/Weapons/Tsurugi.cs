@@ -375,18 +375,12 @@ namespace asuw.Content.Items.Weapons
 
             Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, default, lightColor * Projectile.Opacity, Projectile.rotation, origin, Projectile.scale, effects, 0);
 
-            Effect shader = ModContent.Request<Effect>("asuw/Effects/ColorizeBloom", AssetRequestMode.ImmediateLoad).Value;
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
-            shader.Parameters["color2"].SetValue((Color.OrangeRed).ToVector4());
-            shader.Parameters["color1"].SetValue((Color.Maroon).ToVector4());
-            shader.Parameters["alpha"].SetValue(Projectile.Opacity);
-            shader.CurrentTechnique.Passes["EffectPass"].Apply();
-
+            ShaderFunctions.vertexColorBloom(Main.spriteBatch, Color.Maroon, Color.OrangeRed, Projectile.Opacity);
             Main.spriteBatch.Draw(muzzleSpark, muzzlePos - Main.screenPosition, default, lightColor * muzzleOP, muzzleRot, origin2s, 1.2f * muzzleScale * new Vector2(1, 0.5f), effects, 0);
             Main.spriteBatch.Draw(muzzle, muzzlePos - Main.screenPosition, default, lightColor * muzzleOP, muzzleRot, origin2, 2f * muzzleScale, effects, 0);
             Main.spriteBatch.ExitShaderRegion();
 
+            Main.spriteBatch.ExitShaderRegion();
             return false;
         }
     }
@@ -656,11 +650,11 @@ namespace asuw.Content.Items.Weapons
             Vector2 origin2s = new Vector2(0, muzzleSpark.Height * 0.5f);
 
             ShaderFunctions.vertexColorBloom(Main.spriteBatch, Color.Maroon, Color.OrangeRed, Projectile.Opacity);
-
             Main.spriteBatch.Draw(muzzleSpark, muzzlePos - Main.screenPosition, default, lightColor * muzzleOP, muzzleRot, origin2s, 1.2f * muzzleScale * new Vector2(1,0.5f), effects, 0);
             Main.spriteBatch.Draw(muzzle, muzzlePos - Main.screenPosition, default, lightColor * muzzleOP, muzzleRot, origin2, 2f * muzzleScale, effects, 0);
             Main.spriteBatch.ExitShaderRegion();
 
+            Main.spriteBatch.ExitShaderRegion();
             return false;
         }
 
@@ -687,10 +681,5 @@ namespace asuw.Content.Items.Weapons
 
             drawInfo.DrawDataCache.Add(heldProj);
         }
-       
     }
-
-   
-    
-
 }

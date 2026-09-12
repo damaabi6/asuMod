@@ -605,6 +605,7 @@ Projectiles: {
 	SOLSmallHikariyo.DisplayName: S O L Small Hikariyo
 	SOLWidgets.DisplayName: S O L Widgets
 	HitscanProj.DisplayName: Hitscan Proj
+	HitscanProjinf.DisplayName: Hitscan Projinf
 }
 
 Buffs: {

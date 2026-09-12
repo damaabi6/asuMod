@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using asuw.Content.DrawLayers.UI;
+using asuw.Content.Items.Weapons;
 using asuw.Content.Items.Weapons.Melee;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -12,6 +13,7 @@ namespace asuw.Content.DrawLayers
     {
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
+            Player player = Main.LocalPlayer;
             int mouseIndex = layers.FindIndex(layer => layer.Name == "Vanilla: Mouse Text");
             int entityMarkIndex = layers.FindIndex(layer => layer.Name == "Vanilla: Entity Markers");
             //BulletsUI
