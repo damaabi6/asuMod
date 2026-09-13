@@ -1,5 +1,6 @@
 
 using log4net;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
@@ -26,14 +27,22 @@ namespace asuw
                 //intensityOnly
                 Asset<Effect> corruptionTintShader = this.Assets.Request<Effect>("Effects/CorruptedTintEffect");
                 Asset<Effect> ZoomBlur = this.Assets.Request<Effect>("Effects/ZoomBlur");
+                Asset<Effect> AngleScreen = this.Assets.Request<Effect>("Effects/AngleScreen");
+                Asset<Effect> ZoomTo = this.Assets.Request<Effect>("Effects/ZoomInto");
 
                 Filters.Scene["asuw:VignetteEffect"] = new Filter(new ScreenShaderData(vignetteShader, "Pass1"), EffectPriority.Medium);
-                Filters.Scene["asuw:CorruptedTint"] = new Filter(new ScreenShaderData(corruptionTintShader, "Pass1"), EffectPriority.VeryHigh);
+                Filters.Scene["asuw:CorruptedTint"] = new Filter(new ScreenShaderData(corruptionTintShader, "Pass1"), EffectPriority.High);
                 Filters.Scene["asuw:ZoomBlur"] = new Filter(new ScreenShaderData(ZoomBlur, "EffectPass"), EffectPriority.Medium);
+                Filters.Scene["asuw:AngleScreen"] = new Filter(new ScreenShaderData(AngleScreen, "EffectPass").UseColor(Color.White)
+                .UseOpacity(1f), EffectPriority.VeryHigh);
+                Filters.Scene["asuw:ZoomInto"] = new Filter(new ScreenShaderData(ZoomTo, "EffectPass").UseColor(Color.White)
+                .UseOpacity(1f), EffectPriority.VeryHigh);
 
                 Filters.Scene["asuw:VignetteEffect"].Load();
                 Filters.Scene["asuw:CorruptedTint"].Load();
                 Filters.Scene["asuw:ZoomBlur"].Load();
+                Filters.Scene["asuw:AngleScreen"].Load();
+                Filters.Scene["asuw:ZoomInto"].Load();
 
             }
 

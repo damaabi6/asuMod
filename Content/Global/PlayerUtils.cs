@@ -27,6 +27,23 @@ namespace asuw.Content
             if (player.asuw().GeneralScreenShakePower < value)
                 player.asuw().GeneralScreenShakePower = value;
         }
+        public static void SetScreenAngle(this Player player, float angle, float fadeOut = 0.1f)
+        {
+            player.asuw().ScreenAngle = MathHelper.ToRadians(angle / 2);
+            player.asuw().ScreenAngleFade = fadeOut;
+        }
+
+        public static void SetScreenZoomInto(this Player player, float zoom, Vector2 pos, float fadeOut = 0.05f)
+        {
+            player.asuw().ScreenZoomTo = zoom * 0.2f;
+            player.asuw().ScreenZoomToPos = pos;
+            player.asuw().ScreenZoomToFade = fadeOut;
+        }
+        public static void SetDarkLayer(this Player player, float opacity, float fadeOut = 0.1f)
+        {
+            player.asuw().DarkBackLayerOP = opacity;
+            player.asuw().DarkBackLayerFade = fadeOut;
+        }
         public static void DisableWingFlapSound(this Player player)
         {
             // vanilla plays a flap sound for all wings barring a few hardcoded exceptions

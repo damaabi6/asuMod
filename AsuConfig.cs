@@ -24,6 +24,10 @@ namespace asuw
         [DefaultValue(false)]
         public bool DisableEnemyDebuffIconScaling { get; set; }
 
-        
+        [BackgroundColor(192, 54, 64, 192)]
+        [SliderColor(224, 165, 56, 128)]
+        [Range(0f, 2f)]
+        [DefaultValue(1f)]
+        public float ScreenEffectsPower { get; set; }
     }
 }

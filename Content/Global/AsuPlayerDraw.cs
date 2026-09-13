@@ -4,6 +4,7 @@ using asuw.Content.Dusts;
 using asuw.Content.Items.Weapons;
 using asuw.Content.Items.Weapons.Melee;
 using asuw.Content.Items.Weapons.Ranged;
+using asuw.Effects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -126,7 +127,6 @@ namespace asuw.Content
                 {
                    
                 }
-
             }
         }
       

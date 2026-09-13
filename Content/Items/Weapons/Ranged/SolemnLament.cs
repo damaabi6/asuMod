@@ -24,14 +24,17 @@ namespace asuw.Content.Items.Weapons.Ranged
         public int AmmoSavedPercent = 60;
 
         public int[] Ammo = new int[2] { 10, 10 };
+        public int AltAmmo = 10;
         public bool[] shoot = new bool[2] { false, false };
+        public bool useAmmo = false;
         int[] proj = [ModContent.ProjectileType<Solemn>(), ModContent.ProjectileType<Lament>()];
         int index = 0;
-		
+        int indexAlt = 0;
+
         public static readonly SoundStyle ShootW = new("asuw/Content/Sounds/Weapons/Ranged/solemn2") { Volume = 0.4f, MaxInstances = 4 };
         public static readonly SoundStyle ShootB = new("asuw/Content/Sounds/Weapons/Ranged/lament2") { Volume = 0.4f, MaxInstances = 4 };
-        public static readonly SoundStyle DingW = new("asuw/Content/Sounds/ButterFlyMan_StongAtk_White") { Volume = 0.5f, MaxInstances = 4 };
-        public static readonly SoundStyle DingB = new("asuw/Content/Sounds/ButterFlyMan_StongAtk_Black") { Volume = 0.5f, MaxInstances = 4 };
+        public static readonly SoundStyle DingW = new("asuw/Content/Sounds/Weapons/Ranged/DingW") { Volume = 0.5f, MaxInstances = 4 };
+        public static readonly SoundStyle DingB = new("asuw/Content/Sounds/Weapons/Ranged/DingB") { Volume = 0.5f, MaxInstances = 4 };
         public static readonly SoundStyle Reload = new("asuw/Content/Sounds/Weapons/Ranged/SolemnLamentReload") { Volume = 0.4f, MaxInstances = 2, PitchVariance = 0.2f };
 
         public override void SetStaticDefaults()
@@ -73,6 +76,7 @@ namespace asuw.Content.Items.Weapons.Ranged
 
         public override bool CanUseItem(Player player) => (Ammo[index] > 0);
         public override bool CanConsumeAmmo(Item ammo, Player player) => Main.rand.Next(100) > 40;
+        public override bool AltFunctionUse(Player player) => AltAmmo > 0 && Ammo[indexAlt] > 0;
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
@@ -85,23 +89,52 @@ namespace asuw.Content.Items.Weapons.Ranged
         }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
-            shoot[index] = true;
-            SoundEngine.PlaySound((index == 0 ? ShootW : ShootB) with { MaxInstances = 2 }, player.Center);
-            int Damage = damage;
-            float ai0 = 0;
-            float ai1 = 0;
-            float ai2 = 0;
-            Vector2 finalVelocity = velocity.RotatedByRandom(0.02f); //for consistent velocity for the 2 hitscan projectiles
-            if (type == ModContent.ProjectileType<HitscanProjinf>())
+            if (player.altFunctionUse == 2 && !player.mouseInterface && !Main.mapFullscreen && !Main.blockMouse)
             {
-                ai0 = 100; // length
-                ai1 = 70; // width
-                ai2 = 40; // lifetime (20 maxupdates)
-                Damage = (int)(Damage * 0.8f);
-                Projectile.NewProjectile(source, position, finalVelocity, ModContent.ProjectileType<HitscanProj>(), damage, knockback, player.whoAmI, ai0, ai1, ai2);
+                shoot[indexAlt] = true;
+                SoundEngine.PlaySound((indexAlt == 0 ? DingW : DingB) with { MaxInstances = 2 }, player.Center);
+                player.SetScreenAngle(Main.rand.NextFloat(2, 3) * (Main.rand.NextBool() ? 1 : -1));
+                player.SetScreenZoomInto(0.1f, player.mouseWorld(), 0.1f);
+                player.SetDarkLayer(0.1f);
+                Projectile.NewProjectile(source, player.mouseWorld(), velocity, ModContent.ProjectileType<HitscanOnceProj>(), damage * 5, knockback, player.whoAmI, 200, 200);
+                player.itemTime *= 4;
+                player.itemAnimation *= 4;
+                Dust explosion = Dust.NewDustPerfect(player.mouseWorld(), ModContent.DustType<ShatteredExplosionNP>(), Vector2.Zero, 0, indexAlt == 0 ? Color.White : Color.Black, Main.rand.NextFloat(0.14f, 0.2f));
+                explosion.noGravity = true;
+                for (int i = 1; i <= Main.rand.Next(9,13); i++)
+                {
+                    int butterflyType = indexAlt == 0 ? ModContent.DustType<ButterflyWhite>() : ModContent.DustType<ButterflyBlack>();
+                    Vector2 butterflyPos = player.mouseWorld() + Utils.NextVector2Circular(Main.rand, 40, 40);
+                    Vector2 butterflyVel = AsuUtils.randomRot().ToRotationVector2() * Main.rand.NextFloat(8, 12);
+                    Dust butterflies = Dust.NewDustPerfect(butterflyPos, butterflyType, butterflyVel, 0, Color.White, Main.rand.NextFloat(1.5f, 2));
+                    butterflies.noGravity = true;
+                }
+                AltAmmo--;
+                indexAlt = indexAlt == 0 ? 1 : 0;
             }
-            Projectile.NewProjectile(source, position, finalVelocity, type, Damage, knockback, player.whoAmI, ai0, ai1, ai2);
-            index = index == 0 ? 1 : 0;
+            else
+            {
+                shoot[index] = true;
+                useAmmo = true;
+                SoundEngine.PlaySound((index == 0 ? ShootW : ShootB) with { MaxInstances = 2 }, player.Center);
+                int Damage = damage;
+                float ai0 = 0;
+                float ai1 = 0;
+                float ai2 = 0;
+                Vector2 finalVelocity = velocity.RotatedByRandom(0.02f); //for consistent velocity for the 2 hitscan projectiles
+                if (type == ModContent.ProjectileType<HitscanProjinf>())
+                {
+                    ai0 = 100; // length
+                    ai1 = 70; // width
+                    ai2 = 50; // lifetime (20 maxupdates)
+                    Damage = (int)(Damage * 0.8f);
+                    Projectile.NewProjectile(source, position, finalVelocity, ModContent.ProjectileType<HitscanProj>(), damage, knockback, player.whoAmI, ai0, ai1, ai2);
+                }
+                Projectile.NewProjectile(source, position, finalVelocity, type, Damage, knockback, player.whoAmI, ai0, ai1, ai2);
+                AltAmmo++;
+                index = index == 0 ? 1 : 0;
+                indexAlt = index;
+            }
             return false;
 		}
 
@@ -171,7 +204,11 @@ namespace asuw.Content.Items.Weapons.Ranged
                         heldWeapon().shoot[index] = false;
                         recoil = 30;
                         shotEffects();
-                        heldWeapon().Ammo[index]--;
+                        if (heldWeapon().useAmmo)
+                        {
+                            heldWeapon().useAmmo = false;
+                            heldWeapon().Ammo[index]--;
+                        }
                     }
                     Projectile.rotation = Projectile.velocity.ToRotation() + recoilRot;
                     player.SetHandRotFront(Projectile.rotation);
@@ -297,7 +334,11 @@ namespace asuw.Content.Items.Weapons.Ranged
                         heldWeapon().shoot[index] = false;
                         recoil = 30;
                         shotEffects();
-                        heldWeapon().Ammo[index]--;
+                        if (heldWeapon().useAmmo)
+                        {
+                            heldWeapon().useAmmo = false;
+                            heldWeapon().Ammo[index]--;
+                        }
                     }
 
                     Projectile.rotation = Projectile.velocity.ToRotation() + recoilRot;
@@ -329,7 +370,6 @@ namespace asuw.Content.Items.Weapons.Ranged
                         player.SetHandRotBack(Projectile.velocity.ToRotation() + recoilRot + MathHelper.ToRadians(70 * reloadRanDir) + rotAmnt * lerp);
                         smearOP = 0;
                     }
-
                     if (time < reloadDur)
                         time++;
                     else

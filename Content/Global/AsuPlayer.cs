@@ -4,6 +4,7 @@ using asuw.Content.Items.Weapons;
 using asuw.Content.Items.Weapons.Melee;
 using asuw.Content.Projectiles;
 using asuw.Content.Projectiles.InfoAndChargeBar;
+using asuw.Effects;
 using JetBrains.Annotations;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -79,6 +80,13 @@ namespace asuw.Content
         public bool SOLChargeUpActivated = false;
 
         public float GeneralScreenShakePower = 0f;
+        public float ScreenAngle = 0f;
+        public float ScreenAngleFade = 0f;
+        public float ScreenZoomTo = 0f;
+        public float ScreenZoomToFade = 0f;
+        public Vector2 ScreenZoomToPos = Vector2.Zero;
+        public float DarkBackLayerOP = 0;
+        public float DarkBackLayerFade = 0;
 
         public bool LungingDown;
         public override void ResetEffects()
@@ -224,6 +232,27 @@ namespace asuw.Content
             if (CorruptionEyeZero && (CorruptionEyeStoredY > 0.2f || CorruptionEyeStoredY < -0.2f) && (Player.velocity.Y > 0.2f || Player.velocity.Y < -0.2f))
             {
                 Player.velocity.Y = CorruptionEyeStoredY;
+            }
+
+            if (Player.whoAmI == Main.myPlayer)
+            {
+                float fadeAngleAmnt = Math.Max(ScreenAngle.AbsDelta(0) * ScreenAngleFade, float.Epsilon);
+                if (MathF.Abs(ScreenAngle) > 0)
+                    ScreenAngle = ScreenAngle.Towards(0, fadeAngleAmnt);
+                ShaderFunctions.AngleScreen(ScreenAngle);
+
+                float fadeZoomToAmnt = Math.Max(ScreenZoomTo.AbsDelta(0) * ScreenZoomToFade, float.Epsilon);
+                if (ScreenZoomTo > 0)
+                {
+                    ScreenZoomTo = ScreenZoomTo.Towards(0, fadeZoomToAmnt);
+                }
+                ShaderFunctions.ZoomScreen(ScreenZoomTo, ScreenZoomToPos);
+
+                float darkLayerFadeAmnt = Math.Max(DarkBackLayerOP.AbsDelta(0) * DarkBackLayerFade, float.Epsilon);
+                if(DarkBackLayerOP > 0)
+                    DarkBackLayerOP = DarkBackLayerOP.Towards(0, darkLayerFadeAmnt);
+                
+
             }
         }
 

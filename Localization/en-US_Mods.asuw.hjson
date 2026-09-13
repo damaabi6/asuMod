@@ -606,6 +606,7 @@ Projectiles: {
 	SOLWidgets.DisplayName: S O L Widgets
 	HitscanProj.DisplayName: Hitscan Proj
 	HitscanProjinf.DisplayName: Hitscan Projinf
+	HitscanOnceProj.DisplayName: Hitscan Once Proj
 }
 
 Buffs: {
@@ -717,6 +718,11 @@ Configs: {
 
 		DisableEnemyDebuffIconScaling: {
 			Label: Disable Enemy Debuff Icon Scaling
+			Tooltip: ""
+		}
+
+		ScreenEffectsPower: {
+			Label: Screen Effects Power
 			Tooltip: ""
 		}
 	}
