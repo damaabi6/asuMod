@@ -51,5 +51,22 @@ namespace asuw.Content
 
             return player;
         }
+
+        public static NPCType ReadModNPC<NPCType>(this BinaryReader reader, bool nullOnInactive = true) where NPCType : ModNPC => ReadNPC(reader, nullOnInactive)?.ModNPC as NPCType;
+        public static ModNPC ReadModNPC(this BinaryReader reader, bool nullOnInactive = true) => ReadNPC(reader, nullOnInactive)?.ModNPC ?? null;
+        public static NPC ReadNPC(this BinaryReader reader, bool nullOnInactive = true)
+        {
+            int index = reader.ReadByte();
+
+            if (index >= Main.maxNPCs)
+                return null;
+
+            var npc = Main.npc[index];
+
+            if (nullOnInactive && npc.IsNullOrInactive())
+                return null;
+
+            return npc;
+        }
     }
 }

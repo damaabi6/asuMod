@@ -115,6 +115,28 @@ namespace asuw.Effects
             Main.spriteBatch.ExitShaderRegion();
         }
 
+        public static void DrawFancyNumbers(Vector2 pos, int num, Color color, float scale, float opacity = 1)
+        {
+            //font is evantic by sign studio on dafont
+            num = Math.Abs(num);
+       
+            int[] digits = num.ToString()
+                        .Select(c => c - '0')
+                        .ToArray();
+
+            for (int i = 0; i < digits.Length; i++)
+            {
+                Texture2D numTex = ModContent.Request<Texture2D>($"asuw/Assets/UIElements/FancyNumbers/FancyNumber{digits[i]}", AssetRequestMode.AsyncLoad).Value;
+                float digitWidth = numTex.Width * scale;
+                float xOffset = (i - (digits.Length - 1) / 2f) * digitWidth;
+                Vector2 finalPos = pos + Vector2.UnitX * xOffset;
+                Vector2 firstDigitIsOneOffset = (digits[0] == 1 && digits.Length > 1) ? Vector2.UnitX * -(digitWidth / (6 + digits.Length)) : Vector2.Zero; // i hate this
+                vertexColored(Main.spriteBatch, color, color, 1);
+                Main.spriteBatch.Draw(numTex, finalPos - Main.screenPosition + firstDigitIsOneOffset, null, Color.White * opacity, 0, numTex.Size() / 2f, scale, SpriteEffects.None, 0);
+                Main.spriteBatch.ExitShaderRegion();
+            }
+        }
+
         public static void vertexTrail(SpriteBatch spriteBatch, Color colorDark, Color colorBright, float opacity, float fadeOut)
         {
             spriteBatch.EnterShaderRegion();
@@ -196,5 +218,6 @@ namespace asuw.Effects
             shader.Parameters["uTime"].SetValue(Main.GlobalTimeWrappedHourly);
             shader.CurrentTechnique.Passes["EffectPass"].Apply();
         }
+
     }
 }

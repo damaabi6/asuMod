@@ -178,61 +178,6 @@ Items: {
 			'''
 	}
 
-	McWood: {
-		DisplayName: Mc Wood
-		Tooltip: ""
-	}
-
-	McStone: {
-		DisplayName: Mc Stone
-		Tooltip: ""
-	}
-
-	McCopper: {
-		DisplayName: Mc Copper
-		Tooltip: ""
-	}
-
-	McGolden: {
-		DisplayName: Mc Golden
-		Tooltip: ""
-	}
-
-	McIron: {
-		DisplayName: Mc Iron
-		Tooltip: ""
-	}
-
-	McDiamond: {
-		DisplayName: Mc Diamond
-		Tooltip: ""
-	}
-
-	SolemnLament: {
-		DisplayName: Solemn Lament
-		Tooltip: ""
-	}
-
-	Mohgwyn: {
-		DisplayName: Mohgwyn
-		Tooltip: ""
-	}
-
-	PentunganSahur: {
-		DisplayName: Pentungan Sahur
-		Tooltip: ""
-	}
-
-	Shiv: {
-		DisplayName: Shiv
-		Tooltip: ""
-	}
-
-	asuwh: {
-		DisplayName: asuwh
-		Tooltip: ""
-	}
-
 	ProjectionSorcery: {
 		DisplayName: Projection Sorcery
 		Tooltip: ""
@@ -359,6 +304,11 @@ Items: {
 			Tsurugi: {
 				DisplayName: Blood & Gunpowder
 				Tooltip: ""
+			}
+
+			SolemnLament: {
+				DisplayName: Solemn Lament
+				Tooltip: Screen Effects : ENABLED
 			}
 		}
 

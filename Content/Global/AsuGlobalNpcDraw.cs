@@ -2,6 +2,7 @@
 using asuw.Content.Dusts;
 using asuw.Content.Global;
 using asuw.Content.Items.Weapons.Melee;
+using asuw.Effects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -81,6 +82,12 @@ namespace asuw.Content
 
                 }
                 
+            }
+
+            if (SinkingStack > 0)
+            {
+                Color colorNum = Color.Lerp(Color.White, Color.Black, MathHelper.SmoothStep(0, 1, (MathF.Sin(Main.GlobalTimeWrappedHourly * 2) + 1) * 0.5f));
+                ShaderFunctions.DrawFancyNumbers(npc.Center, SinkingStack, colorNum, 0.55f * generalScale(npc.Size));
             }
         }
         public override void DrawEffects(NPC npc, ref Color drawColor)
@@ -179,9 +186,27 @@ namespace asuw.Content
             {
                 
             }
+            if (SinkingStack > 0)
+            {
+                int butterflyType = Main.rand.NextBool() ? ModContent.DustType<ButterflyWhite>() : ModContent.DustType<ButterflyBlack>();
+                Vector2 butterflyPos = npc.Center + Utils.NextVector2Circular(Main.rand, npc.width / 5, npc.height / 5);
+                Vector2 butterflyVel = (Vector2.UnitY * Main.rand.NextFloat(-4, -6)).RotatedByRandom(1f);
+                if (Main.rand.NextBool(15 - SinkingStack))
+                {
+                    Dust butterflies = Dust.NewDustPerfect(butterflyPos, butterflyType, butterflyVel, 0, Color.White, Main.rand.NextFloat(0.5f, 1));
+                    butterflies.noGravity = true;
+                }
+            }
         }
 
-
-      
+        // i configure visuals with the dummy
+        public static float generalScale(Vector2 npcSize) 
+        {
+            NPC dummy = new NPC();
+            dummy.SetDefaults(NPCID.TargetDummy);
+            float dummySize = dummy.Size.Length();
+            return npcSize.Length() / dummySize;
+        }
     }
+
 }

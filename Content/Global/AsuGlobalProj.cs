@@ -26,6 +26,8 @@ namespace asuw.Content
         public bool horusProj;
         public bool horusCharged;
         public bool stopDetonateHooks = false;
+        public bool applySinking = false;
+        public bool benefitsFromSinking = false;
         public override bool InstancePerEntity => true;
 
         public int defExtraUpdates = -1;

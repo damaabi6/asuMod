@@ -17,12 +17,11 @@ using Terraria.ModLoader;
 
 namespace asuw.Content.Items.Weapons.Ranged
 {
-    public class SolemnLament : ModItem
+    public class SolemnLament : ModItem, ILocalizedModType
     {
         //TODO skill
-        public int timer = 0;
-        public int AmmoSavedPercent = 60;
-
+        public int AmmoSavedPercent = 30;
+        bool screenEffects = true;
         public int[] Ammo = new int[2] { 10, 10 };
         public int AltAmmo = 10;
         public bool[] shoot = new bool[2] { false, false };
@@ -37,6 +36,7 @@ namespace asuw.Content.Items.Weapons.Ranged
         public static readonly SoundStyle DingB = new("asuw/Content/Sounds/Weapons/Ranged/DingB") { Volume = 0.5f, MaxInstances = 4 };
         public static readonly SoundStyle Reload = new("asuw/Content/Sounds/Weapons/Ranged/SolemnLamentReload") { Volume = 0.4f, MaxInstances = 2, PitchVariance = 0.2f };
 
+        public new string LocalizationCategory => "Items.Weapons.Ranged";
         public override void SetStaticDefaults()
         {
 			ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
@@ -65,7 +65,6 @@ namespace asuw.Content.Items.Weapons.Ranged
 
 		}
 
-        
         public override void AddRecipes()
 		{
 			Recipe recipe = CreateRecipe();
@@ -75,9 +74,20 @@ namespace asuw.Content.Items.Weapons.Ranged
 		}
 
         public override bool CanUseItem(Player player) => (Ammo[index] > 0);
-        public override bool CanConsumeAmmo(Item ammo, Player player) => Main.rand.Next(100) > 40;
+        public override bool CanConsumeAmmo(Item ammo, Player player) => Main.rand.Next(100) > AmmoSavedPercent;
         public override bool AltFunctionUse(Player player) => AltAmmo > 0 && Ammo[indexAlt] > 0;
 
+        public override bool CanRightClick() => Main.keyState.PressingShift();
+        public override void RightClick(Player player)
+        {
+            screenEffects = !screenEffects;
+            Item.NetStateChanged();
+        }
+        public override bool ConsumeItem(Player player) => false;
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            tooltips.FindAndReplace("ENABLED", screenEffects ? "ENABLED" : "DISABLED");
+        }
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
             if (type == ProjectileID.Bullet)
@@ -93,10 +103,15 @@ namespace asuw.Content.Items.Weapons.Ranged
             {
                 shoot[indexAlt] = true;
                 SoundEngine.PlaySound((indexAlt == 0 ? DingW : DingB) with { MaxInstances = 2 }, player.Center);
-                player.SetScreenAngle(Main.rand.NextFloat(2, 3) * (Main.rand.NextBool() ? 1 : -1));
-                player.SetScreenZoomInto(0.1f, player.mouseWorld(), 0.1f);
-                player.SetDarkLayer(0.1f);
-                Projectile.NewProjectile(source, player.mouseWorld(), velocity, ModContent.ProjectileType<HitscanOnceProj>(), damage * 5, knockback, player.whoAmI, 200, 200);
+                if (screenEffects)
+                {
+                    player.SetScreenAngle(Main.rand.NextFloat(2, 3) * (Main.rand.NextBool() ? 1 : -1));
+                    player.SetScreenZoomInto(0.1f, player.mouseWorld(), 0.1f);
+                    player.SetDarkLayer(0.1f);
+                }
+                Projectile altProj = Projectile.NewProjectileDirect(source, player.mouseWorld(), velocity, ModContent.ProjectileType<HitscanOnceProj>(), damage * 5, knockback, player.whoAmI, 200, 200);
+                altProj.asuw().applySinking = true;
+                altProj.asuw().benefitsFromSinking = true;
                 player.itemTime *= 4;
                 player.itemAnimation *= 4;
                 Dust explosion = Dust.NewDustPerfect(player.mouseWorld(), ModContent.DustType<ShatteredExplosionNP>(), Vector2.Zero, 0, indexAlt == 0 ? Color.White : Color.Black, Main.rand.NextFloat(0.14f, 0.2f));
@@ -121,17 +136,18 @@ namespace asuw.Content.Items.Weapons.Ranged
                 float ai0 = 0;
                 float ai1 = 0;
                 float ai2 = 0;
-                Vector2 finalVelocity = velocity.RotatedByRandom(0.02f); //for consistent velocity for the 2 hitscan projectiles
+                Vector2 finalVelocity = velocity.RotatedByRandom(0.02f); //for consistent velocity for the 2 "hitscan" projectiles
                 if (type == ModContent.ProjectileType<HitscanProjinf>())
                 {
                     ai0 = 100; // length
                     ai1 = 70; // width
                     ai2 = 50; // lifetime (20 maxupdates)
                     Damage = (int)(Damage * 0.8f);
-                    Projectile.NewProjectile(source, position, finalVelocity, ModContent.ProjectileType<HitscanProj>(), damage, knockback, player.whoAmI, ai0, ai1, ai2);
+                    Projectile bonusProj = Projectile.NewProjectileDirect(source, position, finalVelocity, ModContent.ProjectileType<HitscanProj>(), damage, knockback, player.whoAmI, ai0, ai1, ai2);
+                    bonusProj.asuw().benefitsFromSinking = true;
                 }
-                Projectile.NewProjectile(source, position, finalVelocity, type, Damage, knockback, player.whoAmI, ai0, ai1, ai2);
-                AltAmmo++;
+                Projectile defaultProj = Projectile.NewProjectileDirect(source, position, finalVelocity, type, Damage, knockback, player.whoAmI, ai0, ai1, ai2);
+                defaultProj.asuw().benefitsFromSinking =  true;
                 index = index == 0 ? 1 : 0;
                 indexAlt = index;
             }
@@ -264,7 +280,7 @@ namespace asuw.Content.Items.Weapons.Ranged
             Main.spriteBatch.Draw(smearTex, Projectile.Center - Main.screenPosition, default, Color.Black * Projectile.Opacity * smearOP, Projectile.rotation, smearTex.Size() / 2f, Projectile.scale * 0.24f, effects, 0);
             Main.spriteBatch.ExitShaderRegion();
             Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, default, lightColor * Projectile.Opacity, Projectile.rotation, origin, Projectile.scale, effects, 0);
-            
+
             Main.spriteBatch.ExitShaderRegion();
             return false;
         }
@@ -384,8 +400,13 @@ namespace asuw.Content.Items.Weapons.Ranged
 
         }
         public override bool ShouldUpdatePosition() => false;
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
+        {
+            overWiresUI.Add(index);
+        }
         public override bool PreDraw(ref Color lightColor)
         {
+            ShaderFunctions.DrawFancyNumbers(player.MountedCenter + Vector2.UnitY * -75, heldWeapon().AltAmmo, Color.White, 0.6f);
             return false;
         }
         //called in offhandLayer
