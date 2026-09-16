@@ -547,6 +547,7 @@ Projectiles: {
 	BlackBladeSpell.DisplayName: Black Blade Spell
 	BlackbladeSpellProj.DisplayName: Blackblade Spell Proj
 	DirectStrikeConst.DisplayName: Direct Strike Const
+	DirectStrike.DisplayName: Direct Strike
 	SmallHikariyo.DisplayName: Small Hikariyo
 	thrusterFire.DisplayName: thruster Fire
 	SOLBigBlast.DisplayName: S O L Big Blast
@@ -557,6 +558,7 @@ Projectiles: {
 	HitscanProj.DisplayName: Hitscan Proj
 	HitscanProjinf.DisplayName: Hitscan Projinf
 	HitscanOnceProj.DisplayName: Hitscan Once Proj
+	SLLMCoffin.DisplayName: S L L M Coffin
 }
 
 Buffs: {

@@ -27,7 +27,7 @@ namespace asuw.Content
         public int SerratedApplicator = -1;
         public int DestinedSpellApplicator = -1;
         public int SinkingStack = 0;
-        public int SinkingCounter = 0;
+        public int SinkingTimer = 0;
 
         public bool IronFlame;
         public bool hasBeenChained = false;
@@ -81,16 +81,16 @@ namespace asuw.Content
 
             if (SinkingStack > 0)
             {
-                SinkingCounter--;
-                if (SinkingCounter <= 0)
+                SinkingTimer--;
+                if (SinkingTimer <= 0)
                 {
-                    SinkingCounter = 300;
+                    SinkingTimer = 300;
                     SinkingStack--;
                 }
             }
             else
             {
-                SinkingCounter = 300;
+                SinkingTimer = 300;
             }
 
             return true;

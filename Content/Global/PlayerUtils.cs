@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using asuw.Content.Items.Accesories.Wings;
+using asuw.Content.Items.Accessories.Wings;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace asuw.Content
 {
@@ -21,6 +24,17 @@ namespace asuw.Content
             }
 
             return result;
+        }
+        public static bool HasEquippedWing(this Player player, int wingType)
+        {
+            if(player.equippedWings == null)
+                return false;
+            if (player.equippedWings.ModItem == null)
+                return false;
+            if (player.equippedWings.ModItem.Type != wingType)
+                return false;
+            return true;
+                   
         }
         public static void SetScreenshake(this Player player, float value)
         {

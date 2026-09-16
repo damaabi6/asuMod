@@ -78,7 +78,7 @@ namespace asuw.Content.Items.Weapons
             if (Main.myPlayer == player.whoAmI)
             {
                 int type = ModContent.ProjectileType<SOLHikariyo>();
-                if (player.ownedProjectileCounts[type] < 1 && player.equippedWings != null && player.equippedWings.ModItem.Type == ModContent.ItemType<CoreOfSupernova>())
+                if (player.ownedProjectileCounts[type] < 1 && player.HasEquippedWing(ModContent.ItemType<CoreOfSupernova>()))
                     return true;
             }
             return false;
@@ -116,7 +116,8 @@ namespace asuw.Content.Items.Weapons
         }
         public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
         {
-            if (player.equippedWings != null && player.equippedWings.ModItem.Type == ModContent.ItemType<CoreOfSupernova>()) damage += 1;
+            if(player.HasEquippedWing(ModContent.ItemType<CoreOfSupernova>()))
+            damage += 1;
         }
         public override void UpdateInventory(Player player)
         {
@@ -150,8 +151,8 @@ namespace asuw.Content.Items.Weapons
             if (!player.active || player.dead)
                 return;
 
-            if (player.equippedWings == null || player.equippedWings.ModItem.Type != ModContent.ItemType<CoreOfSupernova>())
-                return;
+            if (!player.HasEquippedWing(ModContent.ItemType<CoreOfSupernova>()))
+            return;
 
             if (player.HeldItem.ModItem != null && player.HeldItem.ModItem is SOL sol)
             {
@@ -372,7 +373,7 @@ namespace asuw.Content.Items.Weapons
         }
         CoreOfSupernova playerWing()
         {
-            if (player.equippedWings != null && player.equippedWings.ModItem is CoreOfSupernova cor)
+            if (player.HasEquippedWing(ModContent.ItemType<CoreOfSupernova>()) && player.equippedWings.ModItem is CoreOfSupernova cor)
                 return cor;
             return null;
         }
@@ -653,9 +654,8 @@ namespace asuw.Content.Items.Weapons
 
         CoreOfSupernova playerWing()
         {
-            if (player.equippedWings != null && player.equippedWings.ModItem is CoreOfSupernova cor)
+            if (player.HasEquippedWing(ModContent.ItemType<CoreOfSupernova>()) && player.equippedWings.ModItem is CoreOfSupernova cor)
                 return cor;
-            
             return null;
         }
 

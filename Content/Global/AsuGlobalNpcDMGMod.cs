@@ -24,14 +24,14 @@ namespace asuw.Content
                 if (SinkingStack < 10)
                 {
                     SinkingStack++;
-                    SinkingCounter += Math.Min(150, SinkingCounter.AbsDelta(300)); // add half duration (2.5s~) every apply
+                    SinkingTimer += Math.Min(150, SinkingTimer.AbsDelta(300)); // add half duration (2.5s~) every apply
                 }
                 else
-                    SinkingCounter += Math.Min(120, SinkingCounter.AbsDelta(300)); // add 2 second for each overstack
+                    SinkingTimer += Math.Min(120, SinkingTimer.AbsDelta(300)); // add 2 second for each overstack
             }
 
-            if (npc.asuw().SinkingStack > 0 && projectile.asuw().benefitsFromSinking)
-                modifiers.FinalDamage += (0.02f * npc.asuw().SinkingStack);
+            if (SinkingStack > 0 && (projectile.asuw().benefitsFromSinking || projectile.asuw().applySinking))
+                modifiers.FinalDamage += (0.02f * SinkingStack);
                 
         }
 
@@ -39,15 +39,7 @@ namespace asuw.Content
         {
             Player owner = projectile.GetOwner();
 
-            if(owner.HeldItem.ModItem != null && owner.HeldItem.ModItem is SolemnLament sl)
-            {
-                if (projectile.asuw().benefitsFromSinking && !projectile.asuw().applySinking && projectile.numHits == 0)
-                {
-                    if (Main.rand.NextFloat() < 0.073f / (sl.AltAmmo + 1 + (SinkingStack / 2)))
-                        sl.AltAmmo++;
-                }
-
-            }
+           
         }
 
 

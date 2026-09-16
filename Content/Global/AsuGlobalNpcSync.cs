@@ -20,11 +20,11 @@ namespace asuw.Content
     {
         public override void SendExtraAI(NPC npc, BitWriter bitWriter, BinaryWriter binaryWriter)
         {
-            binaryWriter.Write((short)npc.asuw().SinkingCounter);
+            binaryWriter.Write((short)npc.asuw().SinkingStack);
         }
         public override void ReceiveExtraAI(NPC npc, BitReader bitReader, BinaryReader binaryReader)
         {
-            npc.asuw().SinkingCounter = binaryReader.ReadInt16();
+            npc.asuw().SinkingStack = binaryReader.ReadInt16();
         }
     }
 }

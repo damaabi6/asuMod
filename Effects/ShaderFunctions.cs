@@ -126,7 +126,7 @@ namespace asuw.Effects
 
             for (int i = 0; i < digits.Length; i++)
             {
-                Texture2D numTex = ModContent.Request<Texture2D>($"asuw/Assets/UIElements/FancyNumbers/FancyNumber{digits[i]}", AssetRequestMode.AsyncLoad).Value;
+                Texture2D numTex = ModContent.Request<Texture2D>($"asuw/Assets/UIElements/FancyNumbers/FancyNumber{digits[i]}", AssetRequestMode.ImmediateLoad).Value;
                 float digitWidth = numTex.Width * scale;
                 float xOffset = (i - (digits.Length - 1) / 2f) * digitWidth;
                 Vector2 finalPos = pos + Vector2.UnitX * xOffset;

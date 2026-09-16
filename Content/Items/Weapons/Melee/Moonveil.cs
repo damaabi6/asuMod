@@ -1,4 +1,5 @@
 ﻿using asuw.Content.Dusts;
+using asuw.Effects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Mono.Cecil;
@@ -33,7 +34,7 @@ namespace asuw.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
 		{
-			Item.damage = 178;
+			Item.damage = 136;
 			Item.DamageType = DamageClass.Melee;
 			Item.width = 32;
 			Item.height = 32;
@@ -52,7 +53,7 @@ namespace asuw.Content.Items.Weapons.Melee
         }
 
         public override bool MeleePrefix() => true;
-        public override bool AltFunctionUse(Player player) => FP > 20 ? true : false;
+        public override bool AltFunctionUse(Player player) => FP > 30 ? true : false;
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
@@ -99,8 +100,6 @@ namespace asuw.Content.Items.Weapons.Melee
         Vector2 origin = Vector2.Zero;
         int direction = 1;
         float duration = 40;
-        float scabbardOffset = 0;
-        Vector2 scabbardOffset2;
         float bonusDMG = 0;
         float perfect = 0;
 
@@ -121,12 +120,11 @@ namespace asuw.Content.Items.Weapons.Melee
             player.heldProj = Projectile.whoAmI;
             player.ChangeDir(direction);
 
-            float x = MathHelper.Lerp(107, 46, eased);
-            float y = MathHelper.Lerp(10, 81, eased);
+            Texture2D texture = TextureAssets.Projectile[Type].Value;
+            float x = MathHelper.Lerp(texture.Width * 0.5f, texture.Width * 0.2f, eased);
+            float y = MathHelper.Lerp(texture.Height * 0.5f, direction != 1 ? texture.Height * 0.8f : texture.Height * 0.2f, eased);
 
-            origin = direction != 1 ? new Vector2(x, y) : new Vector2(x, TextureAssets.Projectile[Type].Value.Height - y);
-            scabbardOffset = MathHelper.ToRadians(MathHelper.Lerp((10 * direction), (-1.8f * direction), eased));
-            scabbardOffset2 = new Vector2(0, MathHelper.Lerp(5, 0, AsuUtils.QuartIn(lerp)));
+            origin = new Vector2(x, y);
 
             if (player.asuw().mouseRight)
             {
@@ -161,6 +159,7 @@ namespace asuw.Content.Items.Weapons.Melee
                     dust.noGravity = true;
                     dust.rotation = dust.velocity.ToRotation();
                 }
+                Dust dust2 = Dust.NewDustPerfect(pos, ModContent.DustType<StarBurst>(), Vector2.Zero, 0, Color.MidnightBlue, 0.6f);
                 float rot = AsuUtils.randomRot();
               
             }
@@ -173,7 +172,7 @@ namespace asuw.Content.Items.Weapons.Melee
         {
             if (time > duration / 2.5f)
             {
-                if (player.HeldItem != null && player.HeldItem.ModItem is Moonveil moon) moon.FP -= 20;
+                if (player.HeldItem != null && player.HeldItem.ModItem is Moonveil moon) moon.FP -= 30;
                 player.ChangeDir(player.mouseWorld().X > player.Center.X ? 1 : -1);
                 float dirToMouse = Projectile.AngleTo(player.mouseWorld());
                 Vector2 vel = dirToMouse.ToRotationVector2();
@@ -183,11 +182,11 @@ namespace asuw.Content.Items.Weapons.Melee
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
-            Texture2D textureScabbard = ModContent.Request<Texture2D>("asuw/Content/Items/Weapons/Melee/MoonveilSheate", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D textureScabbard = ModContent.Request<Texture2D>("asuw/Content/Items/Weapons/Melee/MoonveilSheatheRe", AssetRequestMode.ImmediateLoad).Value;
             SpriteEffects effects = direction != 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
-            Vector2 originS = direction != 1 ? new Vector2(48, 84) : new Vector2(48, TextureAssets.Projectile[Type].Value.Height - 84);
+            Vector2 originS = direction != 1 ? new Vector2(textureScabbard.Width * 0.2f, textureScabbard.Height * 0.8f) : new Vector2(textureScabbard.Width * 0.2f, textureScabbard.Height * 0.2f);
             Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, default, lightColor * Projectile.Opacity, Projectile.rotation + (MathHelper.PiOver2 * (direction != 1 ? -1.3f : -0.7f)), origin, Projectile.scale, effects, 0);
-            Main.spriteBatch.Draw(textureScabbard, Projectile.Center - Main.screenPosition + scabbardOffset2, default, lightColor * Projectile.Opacity, Projectile.rotation + (MathHelper.PiOver2 * (direction != 1 ? -1.3f : -0.7f)) + scabbardOffset, originS, Projectile.scale, effects, 0);
+            Main.spriteBatch.Draw(textureScabbard, Projectile.Center - Main.screenPosition , default, lightColor * Projectile.Opacity, Projectile.rotation + (MathHelper.PiOver2 * (direction != 1 ? -1.3f : -0.7f)), originS, Projectile.scale, effects, 0);
             return false;
         }
     }
@@ -236,15 +235,14 @@ namespace asuw.Content.Items.Weapons.Melee
             player.ChangeDir(pDirection);
             float val = time / (int)(duration);
             float lerp = AsuUtils.CircInOut(val);
-            float t = time / (int)(duration / 2f);
-            float v = t <= 1f ? t : 2f - t;
+            float v = AsuUtils.PingPong(time, duration);
 
-            if (time == (int)(duration * 0.25f))
+            if (time == (int)(duration * 0.3f))
             {
                 if(transientMoonlight != 1)SoundEngine.PlaySound(Moonveil.swing with { Volume = 0.35f, Pitch = 0.7f, PitchVariance = 0.4f }, Projectile.Center);
                 else SoundEngine.PlaySound(Moonveil.shoot with { MaxInstances = 2, PitchVariance = 0.2f, Volume = 0.8f }, Projectile.Center);
             }
-            if (transientMoonlight == 1 && time == (int)(duration * 0.35f))
+            if (transientMoonlight == 1 && time == (int)(duration * 0.4f))
             {
                 Vector2 pos = player.Center + Projectile.velocity * 140 + player.velocity;
                 Vector2 squish = new Vector2(0.3f, 1.3f);
@@ -265,7 +263,7 @@ namespace asuw.Content.Items.Weapons.Melee
             player.SetHandRotFront(Projectile.rotation);
             Projectile.Center = player.GetFrontHandPositionImproved(player.compositeFrontArm);
             Projectile.scale = (attCount != 4 ? 1f : MathHelper.Lerp(1f, 1.4f, AsuUtils.SineIn(v))) * player.GetMeleeScale();
-            Projectile.Opacity = Utils.GetLerpValue(0f, 1f, AsuUtils.QuadOut(v), true);
+            Projectile.Opacity = MathHelper.Lerp(0f, 1f, AsuUtils.QuadOut(v));
             trailOP = MathHelper.Lerp(0, 1, AsuUtils.QuadOut(v));
 
             if (time > (int)(duration * 0.2f))
@@ -295,60 +293,34 @@ namespace asuw.Content.Items.Weapons.Melee
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
-            Vector2 origin = direction == 1 ? new Vector2(9, 107) : new Vector2(9, texture.Height - 107);
+            Vector2 origin = direction == 1 ? new Vector2(texture.Width * 0.1f, texture.Height * 0.9f) : new Vector2(texture.Width * 0.1f, texture.Height * 0.1f);
             SpriteEffects effects = direction == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
-
-            Texture2D trail = ModContent.Request<Texture2D>("asuw/Assets/GraySmear", AssetRequestMode.ImmediateLoad).Value;
-
+            Texture2D trail = ModContent.Request<Texture2D>("asuw/Assets/MotionTrail2", AssetRequestMode.ImmediateLoad).Value;
             float trailOffset = MathHelper.ToRadians(-45 * direction);
 
             List<ColoredVertex> ve = new List<ColoredVertex>();
             for (int i = 0; i < odr.Count; i++)
             {
                 Color b = new Color(252, 255, 199);
-                ve.Add(new ColoredVertex(Projectile.Center - Main.screenPosition + ((odr[i] + rotOffset + trailOffset).ToRotationVector2() * (texture.Width * 1.26f * Projectile.scale)),
+                ve.Add(new ColoredVertex(Projectile.Center - Main.screenPosition + ((odr[i] + rotOffset + trailOffset).ToRotationVector2() * (texture.Width * 1.27f * Projectile.scale)),
                       new Vector3((i) / ((float)odr.Count - 1), 0, 1),
                       b));
-                ve.Add(new ColoredVertex(Projectile.Center - Main.screenPosition + ((odr[i] + rotOffset + trailOffset).ToRotationVector2() * (texture.Width * 0.5f * Projectile.scale)),
+                ve.Add(new ColoredVertex(Projectile.Center - Main.screenPosition + ((odr[i] + rotOffset + trailOffset).ToRotationVector2() * (texture.Width * 0.2f * Projectile.scale)),
                       new Vector3((i) / ((float)odr.Count - 1), 1, 1),
                       b));
             }
 
             Color trailCol = transientMoonlight == 1 ? Color.RoyalBlue : Color.White;
-
-            Main.spriteBatch.EnterShaderRegion();
             if (ve.Count >= 3)
             {
                 var gd = Main.graphics.GraphicsDevice;
-                SpriteBatch sb = Main.spriteBatch;
-                Effect shader = transientMoonlight == 1 ? ModContent.Request<Effect>("asuw/Effects/ColorizeBloom", AssetRequestMode.ImmediateLoad).Value : ModContent.Request<Effect>("asuw/Effects/Colorize", AssetRequestMode.ImmediateLoad).Value;
-                sb.End();
-                sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
-                shader.Parameters["color2"].SetValue((trailCol).ToVector4());
-                shader.Parameters["color1"].SetValue((trailCol * 0.8f).ToVector4());
-                shader.Parameters["alpha"].SetValue(trailOP * (attCount != 4 ? 0.5f : 1f));
-                shader.CurrentTechnique.Passes["EffectPass"].Apply();
-
+                ShaderFunctions.vertexColorBloom(Main.spriteBatch, trailCol, trailCol, trailOP * (attCount != 4 ? 0.5f : 1f));
                 gd.Textures[0] = trail;
                 gd.DrawUserPrimitives(PrimitiveType.TriangleStrip, ve.ToArray(), 0, ve.Count - 2);
                 Main.spriteBatch.ExitShaderRegion();
-                if (transientMoonlight == 1)
-                {
-                    sb.End();
-                    sb.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
-                    shader.Parameters["color2"].SetValue((Color.DarkSlateBlue).ToVector4());
-                    shader.Parameters["color1"].SetValue((Color.DodgerBlue * 0.8f).ToVector4());
-                    shader.Parameters["alpha"].SetValue(trailOP * 0.84f);
-                    shader.CurrentTechnique.Passes["EffectPass"].Apply();
-                    trail = ModContent.Request<Texture2D>("asuw/Assets/ForwardSmear", AssetRequestMode.ImmediateLoad).Value;
-                    gd.Textures[0] = trail;
-                    gd.DrawUserPrimitives(PrimitiveType.TriangleStrip, ve.ToArray(), 0, ve.Count - 2);
-                    Main.spriteBatch.ExitShaderRegion();
-                }
             }
 
             Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, default, lightColor * Projectile.Opacity, Projectile.rotation + rotOffset, origin, Projectile.scale, effects, 0);
-
             Main.spriteBatch.ExitShaderRegion();
             return false;
         }
@@ -361,7 +333,7 @@ namespace asuw.Content.Items.Weapons.Melee
             Projectile.FriendlySetDefaults(DamageClass.Melee, false, -1);
             Projectile.timeLeft = 70;
             Projectile.localNPCHitCooldown = -1;
-            Projectile.MaxUpdates = 5;
+            Projectile.MaxUpdates = 4;
             Projectile.Opacity = 0;
         }
         Player player => Projectile.GetOwner();

@@ -5,10 +5,73 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace asuw.Content.Projectiles
 {
+    public class DirectStrike : ModProjectile
+    {
+        public override string Texture => "asuw/Assets/Blank";
+        public bool invalidTarget => (Projectile.ai[0] < 0f || Projectile.ai[0] > 199f);
+        ref float armorPenet => ref Projectile.ai[1];
+        ref float setCrit => ref Projectile.ai[2];
+
+        public override void SetDefaults()
+        {
+            Projectile.width = 2;
+            Projectile.height = 2;
+            Projectile.friendly = true;
+            Projectile.penetrate = 1;
+            Projectile.extraUpdates = 0;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.alpha = 255;
+            Projectile.timeLeft = 2;
+        }
+        public override void OnSpawn(IEntitySource source)
+        {
+            setCrit = (int)Math.Clamp(setCrit, 0, 1);
+            armorPenet = Math.Clamp(armorPenet, 0, 1f);
+        }
+        public override void AI()
+        {
+            if (Projectile.knockBack < 0)
+            {
+                Projectile.knockBack = 0;
+            }
+
+            // If the target is moving VERY fast, direct strikes spawned on top of them can actually miss
+            // Setting a target will guarantee hits on said target by teleporting the projectile onto their center every frame
+            // Setting a target will guarantee hits on said target by teleporting the projectile onto them every frame
+            if (!invalidTarget)
+                Projectile.Center = Main.npc[(int)Projectile.ai[0]].Center;
+        }
+
+        // If the AI parameter isn't a valid NPC slot, it can hit anything. Otherwise it can only hit one NPC.
+        public override bool? CanHitNPC(NPC target)
+        {
+            if (invalidTarget || Projectile.ai[0] == target.whoAmI)
+                return null;
+            return (bool?)false;
+        }
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+            if (projHitbox.Intersects(targetHitbox))
+            {
+                NPC target = Main.npc[(int)Projectile.ai[0]];
+                return true;
+            }
+            return false;
+        }
+        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
+        {
+            modifiers.ScalingArmorPenetration += armorPenet;
+            if (setCrit == 1)
+                modifiers.SetCrit();
+        }
+
+    }
     public class DirectStrikeConst : ModProjectile
     {
         public override string Texture => "asuw/Assets/Blank";

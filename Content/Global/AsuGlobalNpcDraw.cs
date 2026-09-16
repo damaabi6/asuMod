@@ -2,6 +2,7 @@
 using asuw.Content.Dusts;
 using asuw.Content.Global;
 using asuw.Content.Items.Weapons.Melee;
+using asuw.Content.Items.Weapons.Ranged;
 using asuw.Effects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -84,10 +85,11 @@ namespace asuw.Content
                 
             }
 
-            if (SinkingStack > 0)
+            if (SinkingStack > 0 && Main.LocalPlayer.HeldItem != null && Main.LocalPlayer.HeldItem.type == ModContent.ItemType<SolemnLament>())
             {
                 Color colorNum = Color.Lerp(Color.White, Color.Black, MathHelper.SmoothStep(0, 1, (MathF.Sin(Main.GlobalTimeWrappedHourly * 2) + 1) * 0.5f));
-                ShaderFunctions.DrawFancyNumbers(npc.Center, SinkingStack, colorNum, 0.55f * generalScale(npc.Size));
+                float scale = generalScale(npc.Size) > 1 ? 1 + (generalScale(npc.Size).AbsDelta(1f) / 2f) : generalScale(npc.Size);
+                ShaderFunctions.DrawFancyNumbers(npc.Center, SinkingStack, colorNum, 0.55f * generalScale(npc.Size) / scale);
             }
         }
         public override void DrawEffects(NPC npc, ref Color drawColor)
