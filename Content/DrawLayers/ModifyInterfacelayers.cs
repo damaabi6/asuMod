@@ -16,6 +16,14 @@ namespace asuw.Content.DrawLayers
             Player player = Main.LocalPlayer;
             int mouseIndex = layers.FindIndex(layer => layer.Name == "Vanilla: Mouse Text");
             int entityMarkIndex = layers.FindIndex(layer => layer.Name == "Vanilla: Entity Markers");
+            //Cooldowns
+            layers.Insert(mouseIndex, new LegacyGameInterfaceLayer("CooldownUI", () =>
+            {
+                if (Main.myPlayer == player.whoAmI)
+                    player.asuw().DrawCooldownBar();
+
+                return true;
+            }, InterfaceScaleType.None));
             //BulletsUI
             layers.Insert(mouseIndex, new LegacyGameInterfaceLayer("BulletsUI", () =>
             {
@@ -54,9 +62,10 @@ namespace asuw.Content.DrawLayers
                 return true;
             }, InterfaceScaleType.None));
             //Moonveil
-            layers.Insert(mouseIndex, new LegacyGameInterfaceLayer("MoonveilFPUI", () =>
+            layers.Insert(mouseIndex, new LegacyGameInterfaceLayer("GenericBarUI", () =>
             {
-                MoonveilFPUI.Draw(Main.spriteBatch);
+                if(player.asuw().barOP > 0)
+                player.asuw().DrawBar();
                 return true;
             }, InterfaceScaleType.None));
             //Homa Bloom Blossom

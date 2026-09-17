@@ -20,9 +20,9 @@ namespace asuw.Content.Cooldown.WeaponCooldowns
         public override void Update(Player player, ref int buffIndex)
         {
             
-                player.GetModPlayer<AsuPlayer>().CoolTick =  360  - player.GetModPlayer<AsuPlayer>().CoolTickDown;
-                player.GetModPlayer<AsuPlayer>().CoolTickDown++;
-                player.GetModPlayer<AsuPlayer>().WeaponCooldown = true;
+            player.GetModPlayer<AsuPlayer>().CoolTick =  360  - player.GetModPlayer<AsuPlayer>().CoolTickDown;
+            player.GetModPlayer<AsuPlayer>().CoolTickDown++;
+            player.GetModPlayer<AsuPlayer>().WeaponCooldown = true;
             
         }
 

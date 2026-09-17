@@ -95,23 +95,45 @@ namespace asuw.Effects
                 Filters.Scene[shader].Deactivate();
         }
 
-        public static void DrawRectangle(Vector2 center, float width, float height, Color color, float opacity)
+        public static ColoredVertex[] Rectanglevertex(Vector2 center, float width, float height, float originOffsetX = 0.5f, float originOffsetY = 0.5f, bool adjustToScreenPos = true, bool useTransfromationMatrix = false)
         {
+            originOffsetX = Math.Clamp(originOffsetX, 0, 1);
+            originOffsetY = Math.Clamp(originOffsetY, 0, 1);
+            Vector2 zoom = useTransfromationMatrix ? Main.GameViewMatrix.Zoom : Vector2.One;
+            Vector2 screenCenter = new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f;
             List<ColoredVertex> rect = new List<ColoredVertex>();
             for (int j = 0; j < 20; j++)
             {
                 for (int k = 0; k < 2; k++)
                 {
-                    Vector2 posX = center - Main.screenPosition - Vector2.UnitX * (width / 2) + Vector2.UnitX * (width / 19f) * j;
-                    Vector2 posY = posX - Vector2.UnitY * (height / 2) * (k == 0 ? 1 : -1);
+                    Vector2 posX = (center - (adjustToScreenPos ? Main.screenPosition : Vector2.Zero))
+                    - Vector2.UnitX * (width * originOffsetX)
+                    + Vector2.UnitX * (width / 19f) * j;
+
+                    float vOffset = (k == 0) ? -height * originOffsetY : height * (1f - originOffsetY);
+                    Vector2 posY = posX + Vector2.UnitY * vOffset;
+
+                    Vector2 finalPos = screenCenter + (posY - screenCenter) * zoom;
+
                     Vector3 coords = new Vector3(j / (20f - 1f), k, 1);
-                    rect.Add(new ColoredVertex(posY, coords, Color.AliceBlue));
+                    rect.Add(new ColoredVertex(finalPos, coords, Color.AliceBlue));
                 }
             }
-            Texture2D tex = ModContent.Request<Texture2D>("asuw/Assets/White",AssetRequestMode.AsyncLoad).Value;
-            vertexColored(Main.spriteBatch, color, color, opacity);
+            return rect.ToArray();
+        }
+        public static void DrawRectangle(Vector2 center, float width, float height, Color color, float opacity, float originOffsetX = 0.5f, float originOffsetY = 0.5f, string overrideTexture = "", bool applyColoring = true, bool adjustToScreenPos = true, bool useTransfromationMatrix = false)
+        {
+            ColoredVertex[] rect = Rectanglevertex(center, width, height, originOffsetX, originOffsetY, adjustToScreenPos, useTransfromationMatrix);
+            string texPath = "asuw/Assets/White";
+            if (!string.IsNullOrEmpty(overrideTexture))
+                texPath = overrideTexture;
+            Texture2D tex = ModContent.Request<Texture2D>(texPath,AssetRequestMode.AsyncLoad).Value;
+            if (applyColoring)
+                vertexColored(Main.spriteBatch, color, color, opacity);
+            else
+                SimpleDraw(Main.spriteBatch, opacity);
             Main.graphics.GraphicsDevice.Textures[0] = tex;
-            Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, rect.ToArray(), 0, rect.Count - 2);
+            Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, rect.ToArray(), 0, rect.Length - 2);
             Main.spriteBatch.ExitShaderRegion();
         }
 
@@ -136,7 +158,15 @@ namespace asuw.Effects
                 Main.spriteBatch.ExitShaderRegion();
             }
         }
-
+        public static void SimpleDraw(SpriteBatch spriteBatch, float opacity)
+        {
+            spriteBatch.EnterShaderRegion();
+            Effect shader = ModContent.Request<Effect>("asuw/Effects/SimplyDraw", AssetRequestMode.ImmediateLoad).Value;
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.LinearWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+            shader.Parameters["alpha"].SetValue(opacity);
+            shader.CurrentTechnique.Passes["EffectPass"].Apply();
+        }
         public static void vertexTrail(SpriteBatch spriteBatch, Color colorDark, Color colorBright, float opacity, float fadeOut)
         {
             spriteBatch.EnterShaderRegion();

@@ -18,6 +18,7 @@ namespace asuw
         internal static asuw Instance => _Instance ??= ModContent.GetInstance<asuw>();
         private static asuw _Instance;
         internal static ILog Log => Instance.Logger;
+
         public override void Load()
         {
             if (Main.netMode != NetmodeID.Server)

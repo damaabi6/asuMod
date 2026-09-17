@@ -1,3 +1,5 @@
+using asuw.Content.Cooldown;
+using asuw.Content.Cooldown.WeaponCooldowns;
 using asuw.Content.Dusts;
 using asuw.Content.Global;
 using asuw.Content.Items.Ammos;
@@ -112,9 +114,9 @@ namespace asuw.Content.Items.Weapons.Ranged
                 {
                     player.SetScreenAngle(Main.rand.NextFloat(2, 3) * (Main.rand.NextBool() ? 1 : -1));
                     player.SetScreenZoomInto(0.1f, player.mouseWorld(), 0.1f);
-                    player.SetDarkLayer(0.1f);
+                    player.SetDarkLayer(0.2f, 0.2f);
                 }
-                Projectile altProj = Projectile.NewProjectileDirect(source, player.mouseWorld(), velocity, ModContent.ProjectileType<HitscanOnceProj>(), damage * 5, knockback, player.whoAmI, 200, 200);
+                Projectile altProj = Projectile.NewProjectileDirect(source, player.mouseWorld(), velocity, ModContent.ProjectileType<HitscanOnceProj>(), damage * 5, knockback, player.whoAmI, 250, 250);
                 altProj.asuw().applySinking = true;
                 altProj.asuw().benefitsFromSinking = true;
                 player.itemTime *= 4;
@@ -154,7 +156,7 @@ namespace asuw.Content.Items.Weapons.Ranged
                 defaultProj.asuw().benefitsFromSinking = true;
                 index = index == 0 ? 1 : 0;
                 indexAlt = index;
-                if (AltAmmo < 6)
+                if (AltAmmo < 4)
                 {
                     if (giveAltAmmoCount < 8)
                         giveAltAmmoCount++;
@@ -164,6 +166,7 @@ namespace asuw.Content.Items.Weapons.Ranged
                         giveAltAmmoCount = 0;
                     }
                 }
+
             }
             return false;
         }
@@ -181,7 +184,7 @@ namespace asuw.Content.Items.Weapons.Ranged
                 if (player.ownedProjectileCounts[proj[1]] < 1)
                     Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, player.asuw().mouseNormalFromPlayer, proj[1], Item.damage, Item.knockBack, player.whoAmI);
 
-                if (AsuKeybinds.WeaponSkill.JustPressed && player.ownedProjectileCounts[ModContent.ProjectileType<SLLMCoffin>()] < 1)
+                if (AsuKeybinds.WeaponSkill.JustPressed && player.ownedProjectileCounts[ModContent.ProjectileType<SLLMCoffin>()] < 1 && !player.hasCD(CoolDownID.SolemnLamentCD))
                 {
                     int dir = player.asuw().mouseNormalFromPlayer.X > 0 ? 1 : -1;
                     Vector2 pos = player.MountedCenter + player.asuw().mouseNormalFromPlayer * 60 + player.asuw().mouseNormalFromPlayer.RotatedBy(-MathHelper.PiOver2 * dir) * 40;
@@ -254,6 +257,7 @@ namespace asuw.Content.Items.Weapons.Ranged
                 }
                 else
                 {
+                    heldWeapon().giveAltAmmoCount = 0;
                     if (time < reloadDur / 2)
                     {
                         if (time == 0)
@@ -386,6 +390,7 @@ namespace asuw.Content.Items.Weapons.Ranged
                 }
                 else
                 {
+                    heldWeapon().giveAltAmmoCount = 0;
                     if (time < (reloadDur / 2))
                     {
                         if (time == 0)
@@ -508,6 +513,10 @@ namespace asuw.Content.Items.Weapons.Ranged
             else
                 return null;
         }
+        public override void OnSpawn(IEntitySource source)
+        {
+            player.AddCD(CoolDownID.SolemnLamentCD, player.asuw().butterflyHairpin ? 660 : 600);
+        }
         public override void AI()
         {
             int phase0n2Dur = 40;
@@ -589,7 +598,7 @@ namespace asuw.Content.Items.Weapons.Ranged
             if (heldWeapon() != null && refundAmmo)
             {
                 refundAmmo = false;
-                if(heldWeapon().AltAmmo < 8)
+                if(heldWeapon().AltAmmo < 6)
                 heldWeapon().AltAmmo++;
             }
             smashOP = Math.Clamp(smashOP - 0.05f, 0, 1);
@@ -620,10 +629,11 @@ namespace asuw.Content.Items.Weapons.Ranged
                 Dust.NewDustPerfect(target.Center + dustOffset, ModContent.DustType<ShatteredExplosionNP>(), Vector2.Zero, 0, i == 0 ? Color.White : Color.Black, 0.03f * (i == 0 ? 0.7f : 1) * AsuGlobalNPC.generalScale(target.Size));
 
             }
+
         }
         public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
         {
-            modifiers.FinalDamage += 0.5f;
+            modifiers.FinalDamage += player.asuw().butterflyHairpin ? 0.7f : 0.5f;
         }
         public override bool PreDraw(ref Color lightColor)
         {

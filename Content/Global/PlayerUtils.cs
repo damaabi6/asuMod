@@ -1,4 +1,5 @@
-﻿using asuw.Content.Items.Accesories.Wings;
+﻿using asuw.Content.Cooldown;
+using asuw.Content.Items.Accesories.Wings;
 using asuw.Content.Items.Accessories.Wings;
 using Microsoft.Xna.Framework;
 using System;
@@ -36,6 +37,15 @@ namespace asuw.Content
             return true;
                    
         }
+        public static bool IsHoldingItem(this Player player, int itemType)
+        {
+            if(player.HeldItem == null)
+                return false;
+            if(player.HeldItem.type != itemType)
+                return false;
+
+            return true;
+        }
         public static void SetScreenshake(this Player player, float value)
         {
             if (player.asuw().GeneralScreenShakePower < value)
@@ -63,6 +73,46 @@ namespace asuw.Content
             // vanilla plays a flap sound for all wings barring a few hardcoded exceptions
             // the flapSound flag is used to see if the sound *has been* played, so we set it to true here to prevent it from playing 
             player.flapSound = true;
+        }
+
+        public static void AddCD(this Player player, int cooldownID, int duration)
+        {
+            player.asuw().addCooldown(cooldownID, duration);
+        }
+
+        public static CoolDown GetCD(this Player player, int CooldownID)
+        {
+            foreach (var cd in player.asuw().ActiveCooldowns)
+            {
+                if(cd.id == CooldownID)
+                    return cd;
+            }
+
+            return null;
+        }
+        public static int GetCurrentCDtick(this Player player, int CooldownID)
+        {
+            CoolDown cd = player.GetCD(CooldownID);
+            if (cd != null)
+                return cd.tick;
+
+            return 0;
+        }
+        public static bool hasCD(this Player player, int cooldownID)
+        {
+            if (player.GetCurrentCDtick(cooldownID) > 0)
+                return true;
+
+            return false;
+        }
+
+        public static void DrawGenericBar(this Player player, float value, Color colorF, Color colorB, float opacity)
+        {
+            AsuPlayer pa = player.asuw();
+            pa.genericBarValue = value;
+            pa.colorBarF = colorF;
+            pa.ColorBarB = colorB;
+            pa.barOP = opacity;
         }
         public static Vector2 GetBackHandPositionImproved(this Player player, Player.CompositeArmData arm)
         {

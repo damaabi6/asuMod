@@ -1,4 +1,5 @@
 ﻿
+using asuw.Content.Cooldown;
 using asuw.Content.Cooldown.WeaponCooldowns;
 using asuw.Content.Dusts;
 using asuw.Content.Items.Weapons;
@@ -25,6 +26,7 @@ namespace asuw.Content
     {
         public int ran = 0;
         //TODO organize ts
+
         public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
         {
             if (!Player.active || Player.dead)
@@ -127,6 +129,7 @@ namespace asuw.Content
                 {
                    
                 }
+
             }
         }
       

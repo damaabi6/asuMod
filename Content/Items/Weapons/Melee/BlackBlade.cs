@@ -1,4 +1,5 @@
 using asuw.Content.Buffs;
+using asuw.Content.Cooldown;
 using asuw.Content.Dusts;
 using asuw.Content.Global;
 using asuw.Content.Particles;
@@ -394,6 +395,7 @@ namespace asuw.Content.Items.Weapons.Melee
             Projectile.scale = isMalikeths ? 1.8f : 1.5f;
             duration = (player.itemTimeMax / 2) * Projectile.MaxUpdates;
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.ToRadians((-140) * Projectile.direction);
+            player.AddCD(CoolDownID.BlackBladeCD, 400);
         }
         public override void AI()
         {

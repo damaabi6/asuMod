@@ -1,4 +1,5 @@
-﻿using asuw.Content.Dusts;
+﻿using asuw.Content.DrawLayers.UI;
+using asuw.Content.Dusts;
 using asuw.Effects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,7 +22,7 @@ namespace asuw.Content.Items.Weapons.Melee
 {
 	public class Moonveil : ModItem
 	{
-        //TODO total mc swords rework
+        //need better sprite
         public float attCount = 0;
         public float FP = 100;
         public static SoundStyle swing = new SoundStyle("asuw/Content/Sounds/MediumSwing");
@@ -34,7 +35,7 @@ namespace asuw.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
 		{
-			Item.damage = 136;
+			Item.damage = 87;
 			Item.DamageType = DamageClass.Melee;
 			Item.width = 32;
 			Item.height = 32;
@@ -71,7 +72,13 @@ namespace asuw.Content.Items.Weapons.Melee
 
             return false;
         }
-
+        public override void HoldItem(Player player)
+        {
+            Color FPcolor = Color.Lerp(Color.MidnightBlue, Color.DodgerBlue, FP / 100f);
+            float barValue = FP / 100f;
+            if(barValue < 1)
+            player.DrawGenericBar(barValue, FPcolor, Color.Lerp(FPcolor, Color.Indigo, 0.4f), 1);
+        }
 
         public override void UpdateInventory(Player player)
         {
@@ -172,7 +179,8 @@ namespace asuw.Content.Items.Weapons.Melee
         {
             if (time > duration / 2.5f)
             {
-                if (player.HeldItem != null && player.HeldItem.ModItem is Moonveil moon) moon.FP -= 30;
+                if (player.IsHoldingItem(ModContent.ItemType<Moonveil>()) && player.HeldItem.ModItem is Moonveil moon) 
+                    moon.FP -= player.asuw().butterflyHairpin ? 36 : 30;
                 player.ChangeDir(player.mouseWorld().X > player.Center.X ? 1 : -1);
                 float dirToMouse = Projectile.AngleTo(player.mouseWorld());
                 Vector2 vel = dirToMouse.ToRotationVector2();
@@ -219,7 +227,7 @@ namespace asuw.Content.Items.Weapons.Melee
             duration = player.itemTimeMax * Projectile.MaxUpdates;
             pDirection = player.direction;
             direction = player.direction * ((attCount == 1 || attCount == 2) ? -1 : 1);
-            rotOffset = MathHelper.ToRadians(direction * 45);
+            //rotOffset = MathHelper.ToRadians(direction * 45);
         }
         public override void AI()
         {
@@ -410,6 +418,10 @@ namespace asuw.Content.Items.Weapons.Melee
             float collisionWidth = texture.Width;
 
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, collisionWidth, ref collisionPoint);
+        }
+        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
+        {
+            modifiers.FinalDamage += player.asuw().butterflyHairpin ? 0.25f : 0;
         }
         public override bool PreDraw(ref Color lightColor)
         {

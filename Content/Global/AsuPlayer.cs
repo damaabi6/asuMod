@@ -1,4 +1,5 @@
-﻿using asuw.Content.Cooldown.WeaponCooldowns;
+﻿using asuw.Content.Cooldown;
+using asuw.Content.Cooldown.WeaponCooldowns;
 using asuw.Content.Items.Accesories;
 using asuw.Content.Items.Weapons;
 using asuw.Content.Items.Weapons.Melee;
@@ -251,7 +252,9 @@ namespace asuw.Content
                 float darkLayerFadeAmnt = Math.Max(DarkBackLayerOP.AbsDelta(0) * DarkBackLayerFade, float.Epsilon);
                 if(DarkBackLayerOP > 0)
                     DarkBackLayerOP = DarkBackLayerOP.Towards(0, darkLayerFadeAmnt);
-                
+
+                UpdateCooldowns();
+                barOP = Math.Clamp(barOP - 0.1f, 0, 1f);
 
             }
         }
